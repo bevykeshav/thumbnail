@@ -144,10 +144,39 @@ const BI={id:'tech3',name:'3 TECH STOCKS (Q2 Results)',builtin:true,
    {key:'c'+(i+1)+'_scene',label:'Background scene',group:GN[i],type:'textarea',def:DEFC[i][2],presets:true}
   ])
  ]};
+
+const TTL='huge white bold italic condensed capitals with thick black outline and soft glow, sized so the whole word fits inside the panel width';
+const SEC2='huge glossy yellow-orange gradient bold italic capitals with thick black outline and strong drop shadow';
+const D2=[['DEFENCE','dark red','a grey fighter jet taking off on the left against a fiery orange sunset sky, a military radar truck and missile launchers on the ground, a robotic arm machine at the far left, dramatic warm light'],
+ ['SEMICONDUCTOR','deep blue','a large glowing black semiconductor chip in the center of a dark blue circuit board with bright neon blue glowing traces and small electronic components, bright blue light glow around the chip edges'],
+ ['SHIPBUILDING','dark green','a large grey naval warship docked at a dockyard with two tall yellow cranes on both sides, golden sunset sky and clouds, calm water reflecting the light']];
+const BI2={id:'damdar3',name:'3 दमदार STOCK (Sector wale)',builtin:true,
+ template:{
+  task:'Create a high-CTR YouTube thumbnail for an Indian stock market video, exactly in the layout and style described below. Only the items marked as changeable should differ from this description.',
+  canvas:{aspect_ratio:'16:9 (YouTube thumbnail)',quality:'ultra sharp, high contrast, saturated colors, cinematic lighting, professional finance news thumbnail'},
+  top_headline:{text:'{{top_text}}',style:'huge ultra bold italic capitals across the top, the first number in glossy yellow-orange gradient and much larger, the middle Hindi word in white bold Devanagari, the last word in glossy yellow italic, every letter with thick black outline and subtle glow',behind_text:'a black torn brush-stroke banner across the full top with rough edges and a thin glowing orange line under it'},
+  green_arrow:'a bright neon green zigzag arrow with glow at the top right pointing up and to the right, over small green candlesticks',
+  panel_layout:{structure:'three equal vertical panels side by side filling the area below the top headline, separated by thin glowing slanted divider lines: orange-red between the first and second panel, green between the second and third',
+   text_position:'in each panel the two text lines sit at the top, the scene photo fills the lower half'},
+  panels:[0,1,2].map(i=>({position:POS[i],title_text:'{{p'+(i+1)+'_title}}',title_style:TTL,second_line_text:'{{p'+(i+1)+'_second}}',second_line_style:SEC2,
+   banner:'a torn brush-stroke banner in {{p'+(i+1)+'_colour}} behind the two text lines, with rough edges and a soft glow of the same color',
+   background_scene:'{{p'+(i+1)+'_scene}}'})),
+  bottom_background:{details:'dark navy to black base, faint stock ticker numbers and small red and green candlesticks along the left and right edges'},
+  rules:['Write all text exactly as given, with correct spelling','Hindi text must be in clean Devanagari, no broken or garbled letters','Do not add any extra text, watermark or people','Keep every text very large and readable even at small mobile size','Keep the same layout, fonts, effects and positions every time']
+ },
+ fields:[
+  {key:'top_text',label:'Upar ka bada headline',group:'Video ka text',type:'text',def:'3 दमदार STOCK'},
+  ...[0,1,2].flatMap(i=>[
+   {key:'p'+(i+1)+'_title',label:'Pehli line (sector ka naam)',group:GN[i],type:'text',def:D2[i][0]},
+   {key:'p'+(i+1)+'_second',label:'Doosri line (peela text)',group:GN[i],type:'text',def:'STOCK'},
+   {key:'p'+(i+1)+'_colour',label:'Text ke peeche ka rang',group:GN[i],type:'text',def:D2[i][1]},
+   {key:'p'+(i+1)+'_scene',label:'Neeche ka scene',group:GN[i],type:'textarea',def:D2[i][2],presets:true}
+  ])
+ ]};
 let S=load();
 function load(){try{const d=JSON.parse(localStorage.getItem('tsStudio')||'null');if(d&&Array.isArray(d.styles))return d;}catch(e){}return{styles:[],vals:{},cur:'tech3'};}
 function persist(){try{localStorage.setItem('tsStudio',JSON.stringify(S));}catch(e){}}
-const all=()=>[BI,...S.styles];
+const all=()=>[BI,BI2,...S.styles];
 const cur=()=>all().find(s=>s.id===S.cur)||BI;
 function drawSel(){
  const sel=$('#styleSel');sel.replaceChildren();
@@ -239,10 +268,10 @@ $('#saveStyle').onclick=()=>{
  leaves.forEach(x=>{
   const g=typeof x.p[0]==='number'?'Fields':String(x.p[0]);
   if(/\{\{[^{}]+\}\}/.test(x.v)){
-   for(const m of x.v.matchAll(PH)){if(!used.has(m[1])){used.add(m[1]);fields.push({key:m[1],label:m[1].replace(/_/g,' '),group:g,type:'text',def:''});}}
+   for(const m of x.v.matchAll(PH)){if(!used.has(m[1])){used.add(m[1]);fields.push({key:m[1],label:m[1].replace(/_/g,' '),group:g,type:'text',def:'',presets:/scene/i.test(m[1])});}}
   }else if(x.on){
    const k=mkKey(x.p,used);
-   fields.push({key:k,label:x.p.map(s=>typeof s==='number'?s+1:s).join(' → '),group:g,type:(x.v.length>60||/scene|desc|prompt|background/i.test(k))?'textarea':'text',def:x.v});
+   fields.push({key:k,label:x.p.map(s=>typeof s==='number'?s+1:s).join(' → '),group:g,type:(x.v.length>60||/scene|desc|prompt|background/i.test(k))?'textarea':'text',def:x.v,presets:/scene/i.test(k)});
    setAt(x.p,'{{'+k+'}}');
   }
  });
