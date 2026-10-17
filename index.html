@@ -2,14 +2,14 @@
 <html lang="hi">
 <head>
 <meta charset="utf-8">
-<title>Thumbnail Company Changer</title>
+<title>Thumbnail Style Studio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;700&display=swap">
 <style>
-:root{--bg:#E8EBF0;--sf:#fff;--ink:#101828;--mu:#5B6577;--ln:#CBD2DC;--ac:#FFC800;--ok:#0F7B4B;
+:root{--bg:#E8EBF0;--sf:#fff;--ink:#101828;--mu:#5B6577;--ln:#CBD2DC;--ac:#FFC800;--rd:#C6281C;--ok:#0F7B4B;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1117;--sf:#171B24;--ink:#EEF1F6;--mu:#98A2B3;--ln:#2C3340;--ok:#5FD39B}}
-:root[data-theme="dark"]{--bg:#0E1117;--sf:#171B24;--ink:#EEF1F6;--mu:#98A2B3;--ln:#2C3340;--ok:#5FD39B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1117;--sf:#171B24;--ink:#EEF1F6;--mu:#98A2B3;--ln:#2C3340;--rd:#FF8A80;--ok:#5FD39B}}
+:root[data-theme="dark"]{--bg:#0E1117;--sf:#171B24;--ink:#EEF1F6;--mu:#98A2B3;--ln:#2C3340;--rd:#FF8A80;--ok:#5FD39B}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif}
@@ -21,42 +21,59 @@ h1{font-size:clamp(28px,5vw,44px);font-weight:800;letter-spacing:-.02em}
 main{display:grid;gap:16px;padding-top:16px;padding-bottom:40px}
 .card{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:16px}
 h2{font-size:19px;margin-bottom:10px}
-h3{font-size:17px;margin-bottom:8px}
-.panels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-@media(max-width:900px){.panels{grid-template-columns:1fr}}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:560px){.g2{grid-template-columns:1fr}}
+h3{font-size:17px;margin-bottom:6px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.bar>div{flex:1;min-width:220px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 label{display:block;font-weight:700;font-size:14px;margin:10px 0 3px}
 label small{font-weight:400;color:var(--mu)}
 input[type=text],select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--ln);border-radius:8px;padding:8px 10px}
 textarea{resize:vertical}
 input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid var(--ac);outline-offset:1px}
 .pnl{border-top:5px solid var(--ac)}
-.pnl:nth-child(2){border-top-color:#5B8DEF}
-.pnl:nth-child(3){border-top-color:#B04BE0}
 button{font:inherit;font-weight:700;cursor:pointer;border-radius:8px;border:1.5px solid var(--ink);background:var(--sf);color:var(--ink);padding:9px 16px}
 button.pri{background:var(--ac);color:#101828;border-color:var(--ac)}
+button.dg{color:var(--rd);border-color:var(--rd)}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-#out{width:100%;font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;background:var(--bg);color:var(--ink);border:1.5px solid var(--ln);border-radius:8px;padding:10px;resize:vertical}
+#out,#newJson{width:100%;font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;background:var(--bg);color:var(--ink);border:1.5px solid var(--ln);border-radius:8px;padding:10px;resize:vertical}
 .mu{color:var(--mu);font-size:14px}
+.err{color:var(--rd);font-size:14px;min-height:1px;margin-top:8px}
+.lf{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--ln)}
+.lf input{margin-top:5px;width:18px;height:18px;flex:none}
+.lf code{font:13px ui-monospace,Menlo,Consolas,monospace;font-weight:700}
+.lf span{display:block;color:var(--mu);font-size:14px;word-break:break-word}
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
 <header>
-<h1>Thumbnail Company Changer</h1>
-<p class="sub">Neeche teen companies ke naam daalo. Naya JSON apne aap ban jayega, use ChatGPT par paste karo.</p>
+<h1>Thumbnail Style Studio</h1>
+<p class="sub">Style chuno, naam aur text bharo, naya JSON copy karke ChatGPT mein lagao.</p>
 </header>
 <main>
 <section class="card">
-<h2>Video ka text</h2>
-<div class="g2">
-<div><label for="headline">Bada headline</label><input type="text" id="headline" value="3 TECH STOCKS"></div>
-<div><label for="subhead">Hindi line (neeche wali)</label><input type="text" id="subhead" value="कहां है बड़ा मौका ?"></div>
-<div><label for="badgeTop">Badge ka bada text</label><input type="text" id="badgeTop" value="Q2"></div>
-<div><label for="badgeBottom">Laal ribbon ka text</label><input type="text" id="badgeBottom" value="RESULTS"></div>
+<div class="bar">
+<div><label for="styleSel" style="margin-top:0">Thumbnail style</label><select id="styleSel"></select></div>
+<button id="addBtn" type="button">Naya style jodo</button>
+<button id="delBtn" type="button" class="dg" hidden>Ye style hatao</button>
 </div>
 </section>
-<div class="panels" id="panels"></div>
+
+<section class="card" id="addBox" hidden>
+<h2>Naya style jodo</h2>
+<p class="mu">1. Thumbnail ka JSON paste karo. 2. “Fields dhoondo” dabao aur jo cheezein har baar badalni hain unpar tick lagao. 3. Naam likhke save karo.</p>
+<textarea id="newJson" rows="9" placeholder="Yahan thumbnail ka JSON paste karo"></textarea>
+<div class="row"><button id="scan" type="button" class="pri">Fields dhoondo</button></div>
+<div class="err" id="addErr" role="alert"></div>
+<div id="leaves"></div>
+<div id="saveRow" hidden>
+<label for="newName">Style ka naam</label><input type="text" id="newName" placeholder="jaise: Result Day Red">
+<div class="row"><button id="saveStyle" type="button" class="pri">Style save karo</button></div>
+</div>
+</section>
+
+<div class="grid" id="fields"></div>
+
 <section class="card">
 <h2>Naya JSON</h2>
 <textarea id="out" rows="18" readonly></textarea>
@@ -64,100 +81,200 @@ button.pri{background:var(--ac);color:#101828;border-color:var(--ac)}
 <button class="pri" id="copyPrompt" type="button">ChatGPT ke liye copy karo</button>
 <button id="copy" type="button">Sirf JSON copy karo</button>
 <button id="dl" type="button">JSON file download karo</button>
+<button id="resetVals" type="button">Boxes pehle jaise karo</button>
 </div>
 <p class="mu">“ChatGPT ke liye copy karo” JSON ke saath “is JSON ke hisaab se thumbnail banao” bhi jod deta hai.</p>
+</section>
+
+<section class="card">
+<h2>Backup</h2>
+<p class="mu">Saved styles sirf is browser mein rehte hain. Doosre device par le jaane ke liye backup download karo aur wahan restore karo.</p>
+<div class="row">
+<button id="bk" type="button">Backup download karo</button>
+<button id="rs" type="button">Backup se restore karo</button>
+<input type="file" id="rsFile" accept=".json,application/json" hidden>
+</div>
+<div class="err" id="bkMsg"></div>
 </section>
 </main>
 <script>
 const $=s=>document.querySelector(s);
-const SECT={
- semiconductor:{l:'Semiconductor / Chip',scene:'purple and magenta glowing circuit board with tiny electronic components and neon traces, a large black semiconductor chip in the middle with the company name printed on it in white, a bright green upward arrow at the bottom right',hero:'large black semiconductor chip on a purple circuit board',chip:'name',theme:'deep purple, magenta and neon pink with a green arrow accent'},
- ai:{l:'AI / Data center / IT',scene:'rows of glowing blue server racks in a dark data center, a bright glowing blue AI processor chip with the letters AI in front, faint cyan rising candlestick chart lines in the upper right',hero:'glowing blue AI chip with neon circuit edges',chip:'AI',theme:'deep navy blue and electric cyan'},
- defence:{l:'Defence',scene:'fighter jets, a drone, radar dishes and a missile launcher on a dark battlefield horizon, cloudy grey-blue sky, green and red candlestick chart lines in the background',hero:'fighter jet with defence systems',chip:'',theme:'steel grey, olive green and cool blue with orange highlights'},
- aerospace:{l:'Aerospace / Electronics manufacturing',scene:'a white passenger airliner on the left, a fighter jet and drone flying on the right, heavy metallic aerospace and electronics machinery in the foreground, cloudy grey-blue sky, green and red candlestick chart lines in the background',hero:'aerospace and defence machinery with aircraft',chip:'',theme:'steel grey, silver and cool blue'},
- ship:{l:'Shipbuilding / Naval',scene:'a large grey naval warship at a dockyard with tall cranes, ocean at sunset with blue and orange sky, glowing candlestick chart lines rising in the background',hero:'large naval warship at a dockyard',chip:'',theme:'navy blue, steel grey and sunset orange'},
- auto:{l:'Auto / EV',scene:'a sleek electric car with glowing headlights on a futuristic road, charging station with neon light, green candlestick chart lines rising in the background',hero:'sleek electric car',chip:'',theme:'dark teal, electric green and silver'},
- pharma:{l:'Pharma / Healthcare',scene:'a modern laboratory with glowing glass flasks, floating capsules and a DNA helix, clean blue and white light, green candlestick chart lines in the background',hero:'glowing DNA helix with capsules',chip:'',theme:'clean blue, white and mint green'},
- bank:{l:'Bank / Finance',scene:'tall glass bank skyscrapers, golden coins and rupee symbols floating, a rising green candlestick chart in the background',hero:'golden coins with rupee symbol in front of skyscrapers',chip:'',theme:'deep blue and gold'},
- energy:{l:'Energy / Solar / Power',scene:'solar panel fields and wind turbines at golden hour, glowing power lines, green candlestick chart lines rising in the background',hero:'wind turbines and solar panels',chip:'',theme:'bright yellow, sky blue and green'},
- rail:{l:'Railway / Infra',scene:'a modern bullet train speeding on an elevated track at dusk with glowing lights, steel bridge and city skyline, rising candlestick chart lines in the background',hero:'modern bullet train on elevated track',chip:'',theme:'cool blue, white and orange'},
- custom:{l:'Apna scene khud likhunga',scene:'',hero:'',chip:'',theme:'bright saturated colors matching the company'}
-};
-const POS=['left panel','center panel','right panel'];
+const PH=/\{\{\s*([^{}\s]+)\s*\}\}/g;
+const SECT=[
+ ['Semiconductor / Chip','purple and magenta glowing circuit board with tiny electronic components and neon traces, a large black semiconductor chip in the middle with the company name printed on it in white, a bright green upward arrow at the bottom right. Colour theme: deep purple, magenta and neon pink with a green arrow accent'],
+ ['AI / Data center / IT','rows of glowing blue server racks in a dark data center, a bright glowing blue AI processor chip with the letters AI in front, faint cyan rising candlestick chart lines in the upper right. Colour theme: deep navy blue and electric cyan'],
+ ['Defence','fighter jets, a drone, radar dishes and a missile launcher on a dark battlefield horizon, cloudy grey-blue sky, green and red candlestick chart lines in the background. Colour theme: steel grey, olive green and cool blue with orange highlights'],
+ ['Aerospace / Electronics manufacturing','a white passenger airliner on the left, a fighter jet and drone flying on the right, heavy metallic aerospace and electronics machinery in the foreground, cloudy grey-blue sky, green and red candlestick chart lines in the background. Colour theme: steel grey, silver and cool blue, brighter at the top'],
+ ['Shipbuilding / Naval','a large grey naval warship at a dockyard with tall cranes, ocean at sunset with blue and orange sky, glowing candlestick chart lines rising in the background. Colour theme: navy blue, steel grey and sunset orange'],
+ ['Auto / EV','a sleek electric car with glowing headlights on a futuristic road, charging station with neon light, green candlestick chart lines rising in the background. Colour theme: dark teal, electric green and silver'],
+ ['Pharma / Healthcare','a modern laboratory with glowing glass flasks, floating capsules and a DNA helix, clean blue and white light, green candlestick chart lines in the background. Colour theme: clean blue, white and mint green'],
+ ['Bank / Finance','tall glass bank skyscrapers, golden coins and rupee symbols floating, a rising green candlestick chart in the background. Colour theme: deep blue and gold'],
+ ['Energy / Solar / Power','solar panel fields and wind turbines at golden hour, glowing power lines, green candlestick chart lines rising in the background. Colour theme: bright yellow, sky blue and green'],
+ ['Railway / Infra','a modern bullet train speeding on an elevated track at dusk with glowing lights, steel bridge and city skyline, rising candlestick chart lines in the background. Colour theme: cool blue, white and orange']
+];
 const LOGO=[
  'company name in huge bold white italic sans-serif with soft drop shadow, subtext (if any) in small widely spaced white capitals directly below',
  'company name in dark navy wide bold capitals, if subtext exists a thin vertical divider line then the subtext in bright blue bold capitals; light white-grey fade behind the logo so it stays readable',
  'company name in huge chunky rounded white capitals with soft shadow, top right'
 ];
-const DEF=[{n:'Netweb',s:'TECHNOLOGIES',k:'ai'},{n:'CYIENT',s:'DLM',k:'aerospace'},{n:'MOSCHIP',s:'',k:'semiconductor'}];
-const P=[];
-const box=$('#panels');
-DEF.forEach((d,i)=>{
- const c=document.createElement('section');c.className='card pnl';
- c.innerHTML='<h3>'+['Left','Beech wala','Right'][i]+' panel</h3>'+
- '<label>Company ka naam</label><input type="text" class="n">'+
- '<label>Chhota text neeche <small>(optional, jaise TECHNOLOGIES)</small></label><input type="text" class="s">'+
- '<label>Company ka kaam</label><select class="k">'+Object.keys(SECT).map(k=>'<option value="'+k+'">'+SECT[k].l+'</option>').join('')+'</select>'+
- '<label>Background scene <small>(badal sakte ho)</small></label><textarea class="sc" rows="5"></textarea>'+
- '<label>Chip par likha text <small>(khali = apne aap)</small></label><input type="text" class="ch">';
- box.append(c);
- const p={n:c.querySelector('.n'),s:c.querySelector('.s'),k:c.querySelector('.k'),sc:c.querySelector('.sc'),ch:c.querySelector('.ch')};
- p.n.value=d.n;p.s.value=d.s;p.k.value=d.k;p.sc.value=SECT[d.k].scene;
- p.k.onchange=()=>{p.sc.value=SECT[p.k.value].scene;render();};
- [p.n,p.s,p.sc,p.ch].forEach(e=>e.oninput=render);
- P.push(p);
-});
-['headline','subhead','badgeTop','badgeBottom'].forEach(id=>$('#'+id).oninput=render);
-function obj(){
- const cos=P.map((p,i)=>{
-  const S=SECT[p.k.value],name=p.n.value.trim()||'COMPANY',scene=p.sc.value.trim()||S.scene;
-  const chip=p.ch.value.trim()||(S.chip==='name'?name.toUpperCase():S.chip);
-  return {position:POS[i],company_name:name,company_subtext:p.s.value.trim(),logo_style:LOGO[i],background_scene:scene,
-   hero_object:{description:p.k.value==='custom'?scene:S.hero,chip_label:chip},
-   color_theme:S.theme+(i===1?', brighter at the top':'')};
- });
- return {
+const POS=['left panel','center panel','right panel'];
+const GN=['Left panel','Beech wala panel','Right panel'];
+const DEFC=[['Netweb','TECHNOLOGIES',SECT[1][1]],['CYIENT','DLM',SECT[3][1]],['MOSCHIP','',SECT[0][1]]];
+const BI={id:'tech3',name:'3 TECH STOCKS (Q2 Results)',builtin:true,
+ template:{
   task:'Create a high-CTR YouTube thumbnail for an Indian stock market video, exactly in the layout and style described below. Only the items marked as changeable should differ from this description.',
   canvas:{aspect_ratio:'16:9',size:'1672x941',quality:'ultra sharp, high contrast, saturated colors, professional finance news thumbnail'},
-  companies:cos,
-  panel_layout:{structure:'three vertical panels side by side in the top 60 percent of the image, separated by thin slanted white edges so the center panel looks like a trapezoid, the center panel is a little brighter and on top',
-   company_swap_rule:'Each panel must clearly show its own company logo text, subtext, background scene, hero object and chip label. Keep the layout, fonts, positions, text colors and effects unchanged.'},
-  center_badge:{top_text:$('#badgeTop').value.trim(),bottom_text:$('#badgeBottom').value.trim(),
-   style:'black rounded rectangle with thin white border at the center top of the center panel, containing very large glossy yellow-orange gradient top text with thick black outline; below it a glowing red ribbon banner with white bold bottom text with black outline'},
-  headline:{text_main:$('#headline').value.trim(),
-   style:'extra large ultra bold italic capitals across the full width near the bottom third, the first number in glossy yellow-orange gradient and much larger, the middle word in white, the last word in glossy yellow, every letter with thick black outline, strong drop shadow and slight 3D look',
-   behind_text:'a thick red torn brush-stroke banner with rough edges and a red glow behind the whole headline'},
-  subheadline:{text:$('#subhead').value.trim(),language:'Hindi (Devanagari)',
-   style:'large bold Hindi text inside a dark black-green rectangular bar with a thin glowing neon green border, below the headline, first words in white and last words in bright yellow, thick black outline'},
+  companies:POS.map((p,i)=>({position:p,company_name:'{{c'+(i+1)+'_name}}',company_subtext:'{{c'+(i+1)+'_sub}}',logo_style:LOGO[i],background_scene:'{{c'+(i+1)+'_scene}}'})),
+  panel_layout:{structure:'three vertical panels side by side in the top 60 percent of the image, separated by thin slanted white edges so the center panel looks like a trapezoid, the center panel is a little brighter and on top',company_swap_rule:'Each panel must clearly show its own company logo text, subtext and background scene. Keep the layout, fonts, positions, text colors and effects unchanged.'},
+  center_badge:{top_text:'{{badge_top}}',bottom_text:'{{badge_bottom}}',style:'black rounded rectangle with thin white border at the center top of the center panel, containing very large glossy yellow-orange gradient top text with thick black outline; below it a glowing red ribbon banner with white bold bottom text with black outline'},
+  headline:{text_main:'{{headline}}',style:'extra large ultra bold italic capitals across the full width near the bottom third, the first number in glossy yellow-orange gradient and much larger, the middle word in white, the last word in glossy yellow, every letter with thick black outline, strong drop shadow and slight 3D look',behind_text:'a thick red torn brush-stroke banner with rough edges and a red glow behind the whole headline'},
+  subheadline:{text:'{{subheadline}}',language:'Hindi (Devanagari)',style:'large bold Hindi text inside a dark black-green rectangular bar with a thin glowing neon green border, below the headline, first words in white and last words in bright yellow, thick black outline'},
   bottom_background:{description:'dark navy to black base with glowing green candlestick chart rising at the bottom left and bottom right corners, subtle glow'},
   color_palette:{headline_yellow:'#FFD400',headline_white:'#FFFFFF',banner_red:'#D91E18',neon_green:'#22E65A',panel_blue:'#0A3FA8',panel_purple:'#8A2BE2',dark_base:'#050B1A'},
   rules:['Write all text exactly as given, with correct spelling','Hindi text must be in clean Devanagari, no broken or garbled letters','Do not add any extra text, watermark or people','Keep every text very large and readable even at small mobile size','Keep the same layout, fonts, effects and positions every time']
- };
+ },
+ fields:[
+  {key:'headline',label:'Bada headline',group:'Video ka text',type:'text',def:'3 TECH STOCKS'},
+  {key:'subheadline',label:'Hindi line (neeche wali)',group:'Video ka text',type:'text',def:'कहां है बड़ा मौका ?'},
+  {key:'badge_top',label:'Badge ka bada text',group:'Video ka text',type:'text',def:'Q2'},
+  {key:'badge_bottom',label:'Laal ribbon ka text',group:'Video ka text',type:'text',def:'RESULTS'},
+  ...[0,1,2].flatMap(i=>[
+   {key:'c'+(i+1)+'_name',label:'Company ka naam',group:GN[i],type:'text',def:DEFC[i][0]},
+   {key:'c'+(i+1)+'_sub',label:'Chhota text neeche (optional)',group:GN[i],type:'text',def:DEFC[i][1]},
+   {key:'c'+(i+1)+'_scene',label:'Background scene',group:GN[i],type:'textarea',def:DEFC[i][2],presets:true}
+  ])
+ ]};
+let S=load();
+function load(){try{const d=JSON.parse(localStorage.getItem('tsStudio')||'null');if(d&&Array.isArray(d.styles))return d;}catch(e){}return{styles:[],vals:{},cur:'tech3'};}
+function persist(){try{localStorage.setItem('tsStudio',JSON.stringify(S));}catch(e){}}
+const all=()=>[BI,...S.styles];
+const cur=()=>all().find(s=>s.id===S.cur)||BI;
+function drawSel(){
+ const sel=$('#styleSel');sel.replaceChildren();
+ all().forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;sel.append(o);});
+ sel.value=cur().id;$('#delBtn').hidden=!!cur().builtin;
+}
+function drawFields(){
+ const st=cur(),v=S.vals[st.id]=S.vals[st.id]||{},box=$('#fields');box.replaceChildren();
+ [...new Set(st.fields.map(f=>f.group))].forEach(g=>{
+  const c=document.createElement('section');c.className='card pnl';
+  const h=document.createElement('h3');h.textContent=g;c.append(h);
+  st.fields.filter(f=>f.group===g).forEach((f,n)=>{
+   if(v[f.key]===undefined)v[f.key]=f.def||'';
+   const id='f_'+f.key;
+   const l=document.createElement('label');l.htmlFor=id;l.textContent=f.label;c.append(l);
+   const inp=document.createElement(f.type==='textarea'?'textarea':'input');
+   inp.id=id;if(f.type==='textarea')inp.rows=5;else inp.type='text';
+   inp.value=v[f.key];
+   inp.oninput=()=>{v[f.key]=inp.value;render();};
+   if(f.presets){
+    const ps=document.createElement('select');ps.setAttribute('aria-label','Taiyaar scene chuno');
+    ps.innerHTML='<option value="">Taiyaar scene chuno (company ka kaam)</option>'+SECT.map((x,i)=>'<option value="'+i+'">'+x[0]+'</option>').join('');
+    ps.onchange=()=>{if(ps.value!==''){inp.value=SECT[+ps.value][1];v[f.key]=inp.value;render();ps.value='';}};
+    c.append(ps);
+   }
+   c.append(inp);
+  });
+  box.append(c);
+ });
+ render();
+}
+function fill(n,v){
+ if(typeof n==='string')return n.replace(PH,(m,k)=>v[k]===undefined?'':v[k]);
+ if(Array.isArray(n))return n.map(x=>fill(x,v));
+ if(n&&typeof n==='object'){const o={};for(const k of Object.keys(n))o[k]=fill(n[k],v);return o;}
+ return n;
 }
 function render(){
- $('#out').value=JSON.stringify(obj(),null,2);
- try{localStorage.setItem('thumbChanger',JSON.stringify({h:['headline','subhead','badgeTop','badgeBottom'].map(i=>$('#'+i).value),p:P.map(p=>[p.n.value,p.s.value,p.k.value,p.sc.value,p.ch.value])}));}catch(e){}
+ const st=cur();$('#out').value=JSON.stringify(fill(st.template,S.vals[st.id]||{}),null,2);persist();
 }
-function restore(){
- try{
-  const d=JSON.parse(localStorage.getItem('thumbChanger')||'null');if(!d)return;
-  ['headline','subhead','badgeTop','badgeBottom'].forEach((id,i)=>{if(d.h[i]!==undefined)$('#'+id).value=d.h[i];});
-  d.p.forEach((v,i)=>{const p=P[i];if(!p)return;p.n.value=v[0];p.s.value=v[1];p.k.value=v[2];p.sc.value=v[3];p.ch.value=v[4];});
- }catch(e){}
-}
+$('#styleSel').onchange=e=>{S.cur=e.target.value;drawSel();drawFields();};
+$('#resetVals').onclick=()=>{S.vals[cur().id]={};drawFields();};
 async function copyText(t,btn,label){
  try{await navigator.clipboard.writeText(t);}catch(e){const o=$('#out');o.removeAttribute('readonly');o.select();document.execCommand('copy');o.setAttribute('readonly','');}
  btn.textContent='Copy ho gaya';setTimeout(()=>btn.textContent=label,1500);
 }
 $('#copy').onclick=e=>copyText($('#out').value,e.target,'Sirf JSON copy karo');
 $('#copyPrompt').onclick=e=>copyText('Is JSON ke hisaab se thumbnail banao:\n\n'+$('#out').value,e.target,'ChatGPT ke liye copy karo');
-$('#dl').onclick=()=>{
- const a=document.createElement('a');
- a.href=URL.createObjectURL(new Blob([$('#out').value],{type:'application/json'}));
- a.download='thumbnail-'+(P.map(p=>p.n.value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'')).filter(Boolean).join('-')||'style')+'.json';
- document.body.append(a);a.click();a.remove();
+function dlFile(name,text){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'application/json'}));a.download=name;document.body.append(a);a.click();a.remove();}
+$('#dl').onclick=()=>dlFile('thumbnail-'+cur().name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.json',$('#out').value);
+
+/* naya style jodna */
+let draft=null,leaves=[];
+$('#addBtn').onclick=()=>{$('#addBox').hidden=!$('#addBox').hidden;};
+function scan(n,p){
+ if(typeof n==='string')leaves.push({p,v:n});
+ else if(n&&typeof n==='object')Object.keys(n).forEach(k=>scan(n[k],[...p,Array.isArray(n)?+k:k]));
+}
+const LIKE=/name|text|title|headline|company|subtext|scene|description|label|caption|slogan|subtitle/i;
+const SKIP=/style|rule|language|palette|canvas|layout|task|quality/i;
+$('#scan').onclick=()=>{
+ const err=$('#addErr');err.textContent='';
+ try{draft=JSON.parse($('#newJson').value);}catch(e){err.textContent='JSON sahi nahi hai: '+e.message;return;}
+ leaves=[];scan(draft,[]);
+ const box=$('#leaves');box.replaceChildren();
+ if(!leaves.length){err.textContent='Is JSON mein koi text field nahi mila.';$('#saveRow').hidden=true;return;}
+ leaves.forEach((x,i)=>{
+  const has=/\{\{[^{}]+\}\}/.test(x.v);
+  x.on=has||(LIKE.test(String(x.p[x.p.length-1]))&&!x.p.some(s=>SKIP.test(String(s))));
+  const r=document.createElement('label');r.className='lf';r.style.fontWeight='400';
+  const cb=document.createElement('input');cb.type='checkbox';cb.checked=x.on;cb.disabled=has;
+  cb.onchange=()=>{x.on=cb.checked;};
+  const d=document.createElement('div');
+  d.innerHTML='<code></code><span></span>';
+  d.querySelector('code').textContent=x.p.map(s=>typeof s==='number'?s+1:s).join(' → ')+(has?'  (pehle se placeholder)':'');
+  d.querySelector('span').textContent=x.v.length>120?x.v.slice(0,120)+'…':x.v;
+  r.append(cb,d);box.append(r);
+ });
+ $('#saveRow').hidden=false;
 };
-restore();render();
+function mkKey(p,used){
+ let b=p.map(String).join('_').replace(/[^\w]+/g,'_').replace(/^_|_$/g,'')||'field',k=b,n=2;
+ while(used.has(k)){k=b+'_'+n++;}used.add(k);return k;
+}
+$('#saveStyle').onclick=()=>{
+ if(!draft)return;
+ const tpl=JSON.parse(JSON.stringify(draft)),used=new Set(),fields=[];
+ const setAt=(p,val)=>{let o=tpl;for(let i=0;i<p.length-1;i++)o=o[p[i]];o[p[p.length-1]]=val;};
+ leaves.forEach(x=>{
+  const g=typeof x.p[0]==='number'?'Fields':String(x.p[0]);
+  if(/\{\{[^{}]+\}\}/.test(x.v)){
+   for(const m of x.v.matchAll(PH)){if(!used.has(m[1])){used.add(m[1]);fields.push({key:m[1],label:m[1].replace(/_/g,' '),group:g,type:'text',def:''});}}
+  }else if(x.on){
+   const k=mkKey(x.p,used);
+   fields.push({key:k,label:x.p.map(s=>typeof s==='number'?s+1:s).join(' → '),group:g,type:(x.v.length>60||/scene|desc|prompt|background/i.test(k))?'textarea':'text',def:x.v});
+   setAt(x.p,'{{'+k+'}}');
+  }
+ });
+ if(!fields.length){$('#addErr').textContent='Kam se kam ek field par tick lagao.';return;}
+ const s={id:'u'+Date.now(),name:$('#newName').value.trim()||('Style '+(S.styles.length+2)),template:tpl,fields};
+ S.styles.push(s);S.cur=s.id;
+ $('#newJson').value='';$('#newName').value='';$('#leaves').replaceChildren();$('#saveRow').hidden=true;$('#addBox').hidden=true;draft=null;
+ drawSel();drawFields();
+};
+let dt=null;
+$('#delBtn').onclick=e=>{
+ const b=e.target;
+ if(!dt){b.textContent='Pakka hatao?';dt=setTimeout(()=>{b.textContent='Ye style hatao';dt=null;},3000);return;}
+ clearTimeout(dt);dt=null;b.textContent='Ye style hatao';
+ S.styles=S.styles.filter(x=>x.id!==S.cur);delete S.vals[S.cur];S.cur='tech3';drawSel();drawFields();
+};
+
+/* backup */
+$('#bk').onclick=()=>dlFile('thumbnail-styles-backup.json',JSON.stringify({styles:S.styles,vals:S.vals},null,2));
+$('#rs').onclick=()=>$('#rsFile').click();
+$('#rsFile').onchange=async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{
+  const d=JSON.parse(await f.text());
+  if(!Array.isArray(d.styles))throw new Error('styles nahi mile');
+  S={styles:d.styles,vals:d.vals||{},cur:'tech3'};
+  $('#bkMsg').style.color='var(--ok)';$('#bkMsg').textContent='Restore ho gaya: '+d.styles.length+' style.';
+  drawSel();drawFields();
+ }catch(err){$('#bkMsg').style.color='var(--rd)';$('#bkMsg').textContent='Backup file sahi nahi hai: '+err.message;}
+ e.target.value='';
+};
+drawSel();drawFields();
 </script>
 </body>
 </html>
