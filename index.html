@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<title>Thumbnail JSON Editor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;700&display=swap">
+<style>
+:root{--bg:#E8EBF0;--sf:#fff;--ink:#101828;--mu:#5B6577;--ln:#CBD2DC;--ac:#FFC800;--acink:#101828;--rd:#C6281C;--rdbg:#FDECEA;--ybg:#FFF6D1;--ok:#0F7B4B;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1117;--sf:#171B24;--ink:#EEF1F6;--mu:#98A2B3;--ln:#2C3340;--rd:#FF8A80;--rdbg:#3A1E1C;--ybg:#3A3310;--ok:#5FD39B}}
+:root[data-theme="dark"]{--bg:#0E1117;--sf:#171B24;--ink:#EEF1F6;--mu:#98A2B3;--ln:#2C3340;--rd:#FF8A80;--rdbg:#3A1E1C;--ybg:#3A3310;--ok:#5FD39B}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif;min-height:100%}
+h1,h2{font-family:'Bricolage Grotesque',system-ui,sans-serif;margin:0}
+header{padding:28px 20px 8px;max-width:1280px;margin:auto}
+h1{font-size:clamp(28px,5vw,44px);font-weight:800;letter-spacing:-.02em}
+.steps{display:flex;flex-wrap:wrap;gap:8px 20px;margin:10px 0 0;color:var(--mu);font-size:15px}
+.steps b{color:var(--ink)}
+main{display:grid;grid-template-columns:300px minmax(0,1fr) minmax(0,.9fr);gap:16px;max-width:1280px;margin:auto;padding:12px 20px 40px;align-items:start}
+@media(max-width:1000px){main{grid-template-columns:1fr}}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:16px}
+.sticky{position:sticky;top:12px}
+h2{font-size:18px;margin-bottom:10px}
+textarea,input[type=text],input[type=number],select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--ln);border-radius:8px;padding:8px 10px}
+textarea:focus,input:focus,select:focus,button:focus-visible{outline:3px solid var(--ac);outline-offset:1px}
+textarea{resize:vertical}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+button{font:inherit;font-weight:700;cursor:pointer;border-radius:8px;border:1.5px solid var(--ink);background:var(--sf);color:var(--ink);padding:8px 14px}
+button.pri{background:var(--ac);color:var(--acink);border-color:var(--ac)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.err{color:var(--rd);font-size:14px;margin-top:8px;min-height:1px}
+.tpl{display:flex;gap:6px;align-items:center;padding:6px 0;border-top:1px solid var(--ln)}
+.tpl span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tpl button{padding:4px 10px;font-size:14px}
+.mu{color:var(--mu);font-size:14px}
+.node{border-left:3px solid var(--ln);margin:10px 0 0 0;padding-left:12px}
+.node .node{margin-left:2px}
+.head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.key{font-weight:700}
+.meta{color:var(--mu);font-size:13px}
+.rm{margin-left:auto;padding:3px 10px;font-size:14px;color:var(--rd);border-color:var(--rd)}
+.hint{margin:2px 0 6px;font-size:14px;color:var(--mu)}
+.hint.t{background:var(--ybg);padding:2px 8px;border-radius:6px;color:var(--ink)}
+.hint.i{background:var(--rdbg);padding:2px 8px;border-radius:6px;color:var(--ink)}
+.node.removed{border-left-color:var(--rd);opacity:.6}
+.node.removed>.head .key{text-decoration:line-through}
+.node.removed>.children,.node.removed>.field{display:none}
+.node.removed>.head .rm{color:var(--ok);border-color:var(--ok)}
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;font-size:13px}
+.legend span{padding:2px 8px;border-radius:6px}
+#empty{color:var(--mu)}
+</style>
+</head>
+<body>
+<header>
+<h1>Thumbnail JSON Editor</h1>
+<div class="steps"><span><b>1.</b> JSON paste karo</span><span><b>2.</b> Text badlo ya element hatao</span><span><b>3.</b> Naya JSON copy karke apne image tool mein lagao</span></div>
+</header>
+<main>
+<section class="card">
+<h2>Thumbnail ka JSON</h2>
+<textarea id="src" class="mono" rows="10" placeholder="Yahan thumbnail ka JSON paste karo"></textarea>
+<div class="row"><button class="pri" id="load" type="button">Editor mein kholo</button><button id="sample" type="button">Example dekho</button></div>
+<div class="err" id="err" role="alert"></div>
+<h2 style="margin-top:18px">Saved styles</h2>
+<input type="text" id="tname" placeholder="Style ka naam (jaise: Share Market Red)">
+<div class="row"><button id="save" type="button">Style save karo</button></div>
+<div id="tpls"></div>
+</section>
+<section class="card">
+<h2>Badlav yahan karo</h2>
+<div class="legend"><span style="background:var(--ybg)">Peela = text badalne ki jagah</span><span style="background:var(--rdbg)">Laal = image / element hatane ki jagah</span></div>
+<div id="tree"><p id="empty">Pehle left mein JSON paste karke “Editor mein kholo” dabao.</p></div>
+<div class="row"><button id="reset" type="button">Sab kuch original karo</button></div>
+</section>
+<section class="card sticky">
+<h2>Naya JSON <span class="mu" id="cnt"></span></h2>
+<textarea id="out" class="mono" rows="18" readonly></textarea>
+<div class="row"><button class="pri" id="copy" type="button">Copy karo</button></div>
+</section>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+let orig=null,data=null,removed=new Set();
+const imgRe=/image|photo|picture|person|face|subject|logo|icon|character|object|sticker|element|prop|background|overlay|shape/i;
+const textRe=/text|title|headline|caption|label|heading|word|line|subtitle|tagline|quote|name|slogan/i;
+const colRe=/colou?r|hex|tint|gradient/i;
+const SAMPLE={thumbnail:{size:"1280x720",style:"bold YouTube finance thumbnail, high contrast",background:{type:"gradient",color:"#0B1F3A to #C6281C"},subject:{description:"Indian man in suit pointing at a falling red chart",position:"right"},elements:[{name:"red arrow",description:"big red down arrow behind the chart"},{name:"logo",description:"small channel logo top-left"}],text:{headline:"BANK NIFTY CRASH?",subtitle:"Kal kya hoga?",text_color:"#FFC800"}}};
+function hint(key,val){
+ const k=String(key);
+ if(val!==null&&typeof val==='object') return imgRe.test(k)?{c:'i',t:'Ye image/element hatani hai? “Hatao” dabao. Wapas chahiye to “Wapas lao”.'}:{c:'',t:'Poora ye hissa hatana ho to “Hatao” dabao.'};
+ if(typeof val==='string'&&(/^#[0-9a-f]{3,8}$/i.test(val)||colRe.test(k))) return {c:'',t:'Rang badalna hai? Naya colour code type karo (jaise #FFC800).'};
+ if(textRe.test(k)) return {c:'t',t:'Text badalna hai? Is box mein naya text type karo.'};
+ if(imgRe.test(k)) return {c:'i',t:'Is image ka description badal sakte ho, ya “Hatao” dabake ise nikal do.'};
+ return {c:'',t:'Value badalni ho to yahan type karo.'};
+}
+function setAt(path,v){let o=data;for(let i=0;i<path.length-1;i++)o=o[path[i]];o[path[path.length-1]]=v;}
+function build(val,path,label,hk,root){
+ const pk=JSON.stringify(path),isObj=val!==null&&typeof val==='object';
+ const d=document.createElement('div');d.className='node';
+ const head=document.createElement('div');head.className='head';
+ const nm=document.createElement('span');nm.className='key';nm.textContent=root?'Poora thumbnail':label;head.append(nm);
+ if(isObj){const m=document.createElement('span');m.className='meta';m.textContent=Array.isArray(val)?val.length+' items':Object.keys(val).length+' fields';head.append(m);}
+ if(!root){const b=document.createElement('button');b.type='button';b.className='rm';b.textContent='Hatao';
+  b.onclick=()=>{if(removed.has(pk)){removed.delete(pk);d.classList.remove('removed');b.textContent='Hatao';}else{removed.add(pk);d.classList.add('removed');b.textContent='Wapas lao';}refresh();};head.append(b);}
+ d.append(head);
+ if(!root){const h=hint(hk,val);const p=document.createElement('div');p.className='hint '+h.c;p.textContent=h.t;d.append(p);}
+ if(isObj){
+  const ch=document.createElement('div');ch.className='children';
+  const arr=Array.isArray(val);
+  (arr?val.map((_,i)=>i):Object.keys(val)).forEach(k=>ch.append(build(val[k],[...path,k],arr?'item '+(k+1):k,arr?hk:k)));
+  d.append(ch);
+ }else{
+  const f=document.createElement('div');f.className='field';let inp,conv;
+  if(typeof val==='boolean'){inp=document.createElement('select');inp.innerHTML='<option value="true">true</option><option value="false">false</option>';inp.value=String(val);conv=()=>inp.value==='true';}
+  else if(typeof val==='number'){inp=document.createElement('input');inp.type='number';inp.step='any';inp.value=val;conv=()=>inp.value===''?0:Number(inp.value);}
+  else if(val===null){inp=document.createElement('input');inp.type='text';inp.value='null';inp.readOnly=true;conv=()=>null;}
+  else{const long=val.length>50||val.includes('\n');inp=document.createElement(long?'textarea':'input');if(long)inp.rows=3;else inp.type='text';inp.value=val;conv=()=>inp.value;}
+  inp.oninput=()=>{setAt(path,conv());refresh();};
+  f.append(inp);d.append(f);
+ }
+ return d;
+}
+function prune(v,path){
+ if(removed.has(JSON.stringify(path)))return undefined;
+ if(Array.isArray(v))return v.map((x,i)=>prune(x,[...path,i])).filter(x=>x!==undefined);
+ if(v!==null&&typeof v==='object'){const o={};for(const k of Object.keys(v)){const r=prune(v[k],[...path,k]);if(r!==undefined)o[k]=r;}return o;}
+ return v;
+}
+function refresh(){
+ if(data===null){$('#out').value='';$('#cnt').textContent='';return;}
+ $('#out').value=JSON.stringify(prune(data,[]),null,2);
+ $('#cnt').textContent=removed.size?'('+removed.size+' hatayi gayi)':'';
+}
+function open(parsed){
+ orig=parsed;data=JSON.parse(JSON.stringify(parsed));removed=new Set();
+ $('#tree').replaceChildren(build(data,[],'','',true));refresh();
+}
+$('#load').onclick=()=>{
+ try{open(JSON.parse($('#src').value));$('#err').textContent='';}
+ catch(e){$('#err').textContent='JSON sahi nahi hai: '+e.message;}
+};
+$('#sample').onclick=()=>{$('#src').value=JSON.stringify(SAMPLE,null,2);$('#load').click();};
+$('#reset').onclick=()=>{if(orig!==null)open(orig);};
+$('#copy').onclick=async()=>{
+ const t=$('#out').value;if(!t)return;
+ try{await navigator.clipboard.writeText(t);}catch(e){$('#out').select();document.execCommand('copy');}
+ const b=$('#copy');b.textContent='Copy ho gaya';setTimeout(()=>b.textContent='Copy karo',1500);
+};
+function tpls(){try{return JSON.parse(localStorage.getItem('thumbJsonStyles')||'[]');}catch(e){return[];}}
+function putTpls(a){try{localStorage.setItem('thumbJsonStyles',JSON.stringify(a));}catch(e){}}
+function drawTpls(){
+ const box=$('#tpls');box.replaceChildren();const a=tpls();
+ if(!a.length){const p=document.createElement('p');p.className='mu';p.textContent='Abhi koi style save nahi hai.';box.append(p);return;}
+ a.forEach((t,i)=>{
+  const r=document.createElement('div');r.className='tpl';
+  const n=document.createElement('span');n.textContent=t.name;
+  const o=document.createElement('button');o.type='button';o.textContent='Kholo';
+  o.onclick=()=>{$('#src').value=JSON.stringify(t.json,null,2);open(t.json);$('#err').textContent='';};
+  const x=document.createElement('button');x.type='button';x.textContent='×';x.setAttribute('aria-label','Delete '+t.name);
+  x.onclick=()=>{const b=tpls();b.splice(i,1);putTpls(b);drawTpls();};
+  r.append(n,o,x);box.append(r);
+ });
+}
+$('#save').onclick=()=>{
+ if(orig===null){$('#err').textContent='Pehle JSON kholo, phir save karo.';return;}
+ const name=$('#tname').value.trim()||('Style '+(tpls().length+1));
+ const a=tpls();a.push({name,json:orig});putTpls(a);$('#tname').value='';drawTpls();$('#err').textContent='';
+};
+drawTpls();
+</script>
+</body>
+</html>
