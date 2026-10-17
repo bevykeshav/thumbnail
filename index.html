@@ -135,7 +135,7 @@ const BI={id:'tech3',name:'3 TECH STOCKS (Q2 Results)',builtin:true,
  },
  fields:[
   {key:'headline',label:'Bada headline',group:'Video ka text',type:'text',def:'3 TECH STOCKS'},
-  {key:'subheadline',label:'Hindi line (neeche wali)',group:'Video ka text',type:'text',def:'कहां है बड़ा मौका ?'},
+  {key:'subheadline',label:'Hindi line (neeche wali)',group:'Video ka text',type:'text',def:'कहां है बड़ा मौका ?',texts:true},
   {key:'badge_top',label:'Badge ka bada text',group:'Video ka text',type:'text',def:'Q2'},
   {key:'badge_bottom',label:'Laal ribbon ka text',group:'Video ka text',type:'text',def:'RESULTS'},
   ...[0,1,2].flatMap(i=>[
@@ -165,7 +165,7 @@ const BI2={id:'damdar3',name:'3 दमदार STOCK (Sector wale)',builtin:tru
   rules:['Write all text exactly as given, with correct spelling','Hindi text must be in clean Devanagari, no broken or garbled letters','Do not add any extra text, watermark or people','Keep every text very large and readable even at small mobile size','Keep the same layout, fonts, effects and positions every time']
  },
  fields:[
-  {key:'top_text',label:'Upar ka bada headline',group:'Video ka text',type:'text',def:'3 दमदार STOCK'},
+  {key:'top_text',label:'Upar ka bada headline',group:'Video ka text',type:'text',def:'3 दमदार STOCK',texts:true},
   ...[0,1,2].flatMap(i=>[
    {key:'p'+(i+1)+'_title',label:'Pehli line (sector ka naam)',group:GN[i],type:'text',def:D2[i][0]},
    {key:'p'+(i+1)+'_second',label:'Doosri line (peela text)',group:GN[i],type:'text',def:'STOCK'},
@@ -173,6 +173,46 @@ const BI2={id:'damdar3',name:'3 दमदार STOCK (Sector wale)',builtin:tru
    {key:'p'+(i+1)+'_scene',label:'Neeche ka scene',group:GN[i],type:'textarea',def:D2[i][2],presets:true}
   ])
  ]};
+
+const TXT=[
+ {g:'Thumbnail ke ideas',t:[
+  '4 बड़ी खबर, 3 बड़ी खबर (हो गया फैसला)',
+  'जल्दी करो बड़ा मौका',
+  'अब Loss नहीं होगा',
+  'State का नाम (बड़ा आइडिया दिया)',
+  'अभी-अभी आई बड़ी खबर',
+  'festival का नाम (के बाद आई बड़ी खबर)',
+  'बाजार में हाहाकार',
+  'जबरदस्त खुशखबरी आ गई',
+  'Investor सावधान',
+  'होश उड़ा देगी यह खबर',
+  'खबर जिसका इंतजार था!',
+  'Credit Rating',
+  'नया इतिहास रच दिया',
+  'खेल का पर्दाफाश',
+  'बहुत बड़ा खुलासा',
+  'घोटाले का खुलासा',
+  'Company का नाम (ने किया हैरान करने वाला फैसला)',
+  'Notice आया, मैनेजमेंट का बड़ा बयान, CEO का बयान'
+ ]},
+ {g:'Vodafone ke liye',t:[
+  'कंपनी ने बदली रणनीति',
+  'TARGET 65 जाने वाला है!',
+  'दिग्गजों ने दिया भयंकर संकेत',
+  'सरकार का प्लान',
+  'होश उड़ा देगी ये खबर',
+  'सरकार ने बेवकूफ बनाया',
+  'FII ने सबको चौंकाया',
+  'नया प्लान का खुलासा',
+  'USA का खुलासा',
+  'बिरला ने खरीद ली पूरी कंपनी',
+  '2:1 BONUS + BUYBACK',
+  'भारत सरकार का साथ मिला फिर से शेयर बढ़ेगा SC का Action',
+  'पूरा निचोड़ एक video में दिवाली से पहले खरीदने की सलाह',
+  'Finally Company कर्ज FREE हो गयी, अभी-२ आई बड़ी खबर',
+  'Investor के लिए खुशखबरी दिवाली से पहले खरीदने की सलाह'
+ ]}
+];
 let S=load();
 function load(){try{const d=JSON.parse(localStorage.getItem('tsStudio')||'null');if(d&&Array.isArray(d.styles))return d;}catch(e){}return{styles:[],vals:{},cur:'tech3'};}
 function persist(){try{localStorage.setItem('tsStudio',JSON.stringify(S));}catch(e){}}
@@ -201,6 +241,12 @@ function drawFields(){
     ps.innerHTML='<option value="">Taiyaar scene chuno (company ka kaam)</option>'+SECT.map((x,i)=>'<option value="'+i+'">'+x[0]+'</option>').join('');
     ps.onchange=()=>{if(ps.value!==''){inp.value=SECT[+ps.value][1];v[f.key]=inp.value;render();ps.value='';}};
     c.append(ps);
+   }
+   if(f.texts){
+    const ts=document.createElement('select');ts.setAttribute('aria-label','Taiyaar text chuno');
+    ts.innerHTML='<option value="">Taiyaar text chuno (apni list se)</option>'+TXT.map(g=>'<optgroup label="'+g.g+'">'+g.t.map(x=>'<option>'+x+'</option>').join('')+'</optgroup>').join('');
+    ts.onchange=()=>{if(ts.value){inp.value=ts.value;v[f.key]=inp.value;render();ts.value='';}};
+    c.append(ts);
    }
    c.append(inp);
   });
