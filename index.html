@@ -41,7 +41,12 @@
   .datebar button.nav{border:0;background:none;font-size:26px;padding:0 6px}
   #dateShow{font-size:26px;font-weight:700;cursor:pointer;position:relative}
   #datePick{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
-  .center .timebtn{margin-top:4px}
+  .mini{padding:1px 10px;font-weight:700;font-size:14px;background:var(--paper)}
+  .mini:hover{background:#ece9ff}
+  .btnrow{align-items:center;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:4px}
+  .row.line{grid-template-columns:1fr 34px;align-items:center;border-top:0;padding:10px 0}
+  .row.line+.row{border-top:0}
+  .sep{border-top:4px solid #ff3b1f;border-radius:4px}
   .goal{padding:6px 12px 8px;min-width:210px;max-width:260px}
   .goal h3{margin:0 0 2px;font-size:19px}
   .goal ul{list-style:none;margin:0;padding:0}
@@ -57,12 +62,22 @@
   #title{flex:1;min-width:200px}
   #views{width:110px}
 
+  .target{padding:3px 10px 5px;margin-bottom:12px;max-width:340px;font-size:15px;line-height:1.35}
+  .target h3{margin:0 0 1px;font-size:16px}
+  .target ul{list-style:none;margin:0;padding:0}
+  .target li{display:flex;gap:6px;align-items:center}
+  .target li.done span{text-decoration:line-through;opacity:.55}
+  .target li span{flex:1}
+  .target li button{border:0;background:none;font-size:16px;opacity:.55;padding:0 4px}
+  .target input[type=text]{width:100%;border:0;border-bottom:1.5px dashed var(--ink-soft);background:transparent;font:inherit;font-size:14px;color:var(--ink);margin-top:2px}
+  .target input[type=checkbox]{width:15px;height:15px}
+
   /* entries */
   .entries{padding:10px 12px;min-height:65vh}
-  .row{display:grid;grid-template-columns:118px 1fr 28px;gap:12px;padding:6px 0;align-items:start}
+  .row{display:grid;grid-template-columns:150px 1fr 34px;gap:12px;padding:6px 0;align-items:start}
   .row+.row{border-top:1.5px dashed var(--line)}
   .tag{padding:2px 8px;text-align:center;font-weight:700;background:var(--paper)}
-  .tag input{font:inherit;font-weight:700;color:var(--ink);background:transparent;border:0;width:100%;text-align:center}
+  .tag input{font:inherit;font-size:16px;font-weight:700;color:var(--ink);background:transparent;border:0;width:100%;text-align:center}
   .row textarea{width:100%;font:inherit;color:var(--ink);background:transparent;border:0;resize:none;overflow:hidden;min-height:34px;line-height:1.55}
   .row textarea::placeholder{color:#9a94d6}
   .vw{font-size:15px;display:flex;gap:6px;align-items:center;color:var(--ink-soft);margin-top:2px}
@@ -103,7 +118,8 @@
     .top{grid-template-columns:1fr 1fr}
     .center{grid-column:1/3;grid-row:1}
     .goal{grid-column:1/3;max-width:none}
-    .row{grid-template-columns:92px 1fr 34px;gap:8px}
+    .row{grid-template-columns:128px 1fr 34px;gap:8px}
+    .row.line{grid-template-columns:1fr 34px}
     .vid{grid-template-columns:100px 1fr}
   }
   @media (prefers-reduced-motion:no-preference){ .row{animation:in .2s ease-out} @keyframes in{from{opacity:0;transform:translateY(-4px)}} }
@@ -122,9 +138,12 @@
         <div id="dateShow"><span id="dateText"></span><input type="date" id="datePick" aria-label="तारीख चुनो"></div>
         <button class="nav" id="next" aria-label="अगला दिन">›</button>
       </div>
-      <button class="tbtn box timebtn" id="addTime" title="क्लिक करते ही अभी का समय नीचे आ जाएगा">
-        <span id="clock">Time</span><small>क्लिक करो = नीचे जुड़ेगा</small>
-      </button>
+      <div class="btnrow">
+        <button class="tbtn box timebtn" id="addTime" title="क्लिक करते ही अभी का समय नीचे आ जाएगा">
+          <span id="clock">Time</span><small>क्लिक करो = नीचे जुड़ेगा</small>
+        </button>
+      <button class="box mini" id="addLine" title="क्लिक करते ही नीचे एक लाइन आ जाएगी, जिससे वीडियो अलग-अलग दिखें">Line (लाइन)</button>
+      </div>
     </div>
 
     <div class="goal box">
@@ -132,6 +151,12 @@
       <ul id="goalList"></ul>
       <input type="text" id="goalNew" placeholder="+ नया लक्ष्य लिखो, फिर Enter दबाओ">
     </div>
+  </div>
+
+  <div class="target box">
+    <h3>Today's Target (आज का टारगेट)</h3>
+    <ul id="targetList"></ul>
+    <input type="text" id="targetNew" placeholder="+ टारगेट लिखो, Enter दबाओ">
   </div>
 
   <div class="entries box" id="entries"></div>
@@ -214,6 +239,27 @@
     e.target.value=''; save(); renderGoals();
   });
 
+  /* ---------- today's target (day wise) ---------- */
+  function renderTargets(){
+    const list=day().targets||[];
+    $('targetList').innerHTML=list.map((g,i)=>
+      `<li class="${g.done?'done':''}"><input type="checkbox" data-t="${i}" ${g.done?'checked':''} aria-label="पूरा हुआ"><span>${esc(g.t)}</span><button data-td="${i}" aria-label="टारगेट हटाओ">×</button></li>`
+    ).join('');
+  }
+  $('targetList').addEventListener('change',e=>{
+    const i=e.target.dataset.t; if(i==null)return;
+    day().targets[i].done=e.target.checked; save(); renderTargets();
+  });
+  $('targetList').addEventListener('click',e=>{
+    const i=e.target.dataset.td; if(i==null)return;
+    day().targets.splice(i,1); save(); renderTargets();
+  });
+  $('targetNew').addEventListener('keydown',e=>{
+    if(e.key!=='Enter')return; const v=e.target.value.trim(); if(!v)return;
+    const x=day(); (x.targets=x.targets||[]).push({t:v,done:false});
+    e.target.value=''; save(); renderTargets();
+  });
+
   /* ---------- entries ---------- */
   function renderEntries(){
     const list=day().entries;
@@ -222,6 +268,9 @@
       return;
     }
     $('entries').innerHTML=list.map(en=>{
+      if(en.type==='line'){
+        return `<div class="row line" data-id="${en.id}"><div class="sep"></div><button class="del" data-del aria-label="लाइन हटाओ">×</button></div>`;
+      }
       if(en.type==='time'){
         return `<div class="row" data-id="${en.id}">
           <div class="tag box"><input type="time" data-f="time" value="${esc(en.time)}" aria-label="Time"></div>
@@ -282,13 +331,14 @@
   }
   function add(type){
     const x=day();
-    x.entries.push(type==='time'?{id:uid(),type:'time',time:nowHHMM(),text:''}:{id:uid(),type:'thumb',img:'',text:''});
+    x.entries.push(type==='time'?{id:uid(),type:'time',time:nowHHMM(),text:'',views:''}:type==='line'?{id:uid(),type:'line'}:{id:uid(),type:'thumb',img:'',text:''});
     save(); renderEntries();
     const rows=$('entries').querySelectorAll('.row'); const last=rows[rows.length-1];
     const ta=last.querySelector('textarea'); if(ta){ta.focus();} last.scrollIntoView({block:'center',behavior:'smooth'});
   }
   $('addTime').onclick=()=>add('time');
   $('addThumb').onclick=()=>add('thumb');
+  $('addLine').onclick=()=>add('line');
 
   /* ---------- day meta ---------- */
   $('result').addEventListener('input',e=>{day().result=e.target.value;grow(e.target);save()});
@@ -307,6 +357,7 @@
     $('all').innerHTML=keys.map(k=>{
       const d=db.days[k], rows=d.entries.map(e=>{
         if(e.type==='time') return `<div class="sub">${fmt12(e.time)} - ${esc((e.text||'(खाली)').slice(0,110))}${(e.text||'').length>110?'...':''} <b>${e.views!==''&&e.views!=null?Number(e.views).toLocaleString('en-IN')+' व्यूज़':''}</b> ${e.id===bid?'<span class="best">सबसे ज़्यादा व्यूज़</span>':''}</div>`;
+        if(e.type==='line') return '<div class="sub" style="border-top:3px solid #ff3b1f;margin:4px 0"></div>';
         return `<div class="sub">थंबनेल: ${esc((e.text||'(खाली)').slice(0,110))}</div>`;
       }).join('');
       return `<div class="vid" data-k="${k}"><div><b>${pretty(k)}</b></div><div>${d.entries.filter(e=>e.type==='time').length} वीडियो/एंट्री</div>${rows}</div>`;
@@ -333,7 +384,7 @@
     r.readAsText(f); e.target.value='';
   });
 
-  function renderAll_(){ renderHead(); renderGoals(); renderEntries(); if($('all').classList.contains('open'))renderAll(); }
+  function renderAll_(){ renderHead(); renderGoals(); renderTargets(); renderEntries(); if($('all').classList.contains('open'))renderAll(); }
   renderAll_();
 })();
 </script>
