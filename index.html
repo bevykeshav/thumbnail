@@ -18,7 +18,7 @@
   }
   .notebook{
     max-width:980px; margin:0 auto; background:var(--paper); border-radius:6px;
-    padding:20px 22px 28px 46px; position:relative; min-height:92vh;
+    padding:20px 22px 160px 46px; position:relative; min-height:170vh;
     background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,var(--line) 31px,var(--line) 32px);
     box-shadow:0 6px 24px rgba(0,0,0,.4);
   }
@@ -58,13 +58,15 @@
   #views{width:110px}
 
   /* entries */
-  .entries{padding:10px 12px;min-height:240px}
+  .entries{padding:10px 12px;min-height:65vh}
   .row{display:grid;grid-template-columns:118px 1fr 28px;gap:12px;padding:6px 0;align-items:start}
   .row+.row{border-top:1.5px dashed var(--line)}
   .tag{padding:2px 8px;text-align:center;font-weight:700;background:var(--paper)}
   .tag input{font:inherit;font-weight:700;color:var(--ink);background:transparent;border:0;width:100%;text-align:center}
   .row textarea{width:100%;font:inherit;color:var(--ink);background:transparent;border:0;resize:none;overflow:hidden;min-height:34px;line-height:1.55}
   .row textarea::placeholder{color:#9a94d6}
+  .vw{font-size:15px;display:flex;gap:6px;align-items:center;color:var(--ink-soft);margin-top:2px}
+  .vw input{font:inherit;color:var(--ink);background:transparent;border:0;border-bottom:1.5px solid var(--ink);width:110px}
   .del{border:2px solid var(--warn);background:#fff;color:var(--warn);font-size:18px;font-weight:700;line-height:1;width:30px;height:30px;border-radius:50%;padding:0;cursor:pointer}
   .del:hover{background:var(--warn);color:#fff}
   #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2b2a33;color:#fff;padding:10px 16px;border-radius:8px;display:none;gap:14px;align-items:center;z-index:50;box-shadow:0 4px 16px rgba(0,0,0,.4)}
@@ -79,7 +81,7 @@
   /* result */
   .result{margin-top:16px;padding:10px 14px}
   .result h3{margin:0 0 4px;font-size:19px}
-  .result textarea{width:100%;font:inherit;color:var(--ink);background:transparent;border:0;resize:none;overflow:hidden;min-height:60px}
+  .result textarea{width:100%;font:inherit;color:var(--ink);background:transparent;border:0;resize:none;overflow:hidden;min-height:140px}
 
   /* all videos */
   .tools{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
@@ -87,22 +89,22 @@
   .tools button:hover{background:#ece9ff}
   #all{margin-top:14px;padding:10px 14px;display:none}
   #all.open{display:block}
-  .vid{display:grid;grid-template-columns:110px 1fr 90px;gap:10px;padding:6px 0;cursor:pointer;align-items:center}
+  .vid{display:grid;grid-template-columns:130px 1fr;gap:2px 10px;padding:6px 0;cursor:pointer;align-items:center}
   .vid+.vid{border-top:1.5px dashed var(--line)}
   .vid:hover{background:#f1efff}
   .vid .v{text-align:right;font-weight:700}
-  .vid .sub{font-size:14px;color:var(--ink-soft);grid-column:2/4}
+  .vid .sub{font-size:15px;color:var(--ink-soft);grid-column:1/3}
   .best{color:var(--ok);font-size:14px}
 
   @media (max-width:720px){
     body{padding:6px;font-size:17px}
-    .notebook{padding:14px 12px 24px 34px}
+    .notebook{padding:14px 12px 140px 34px}
     .notebook::before{left:26px}
     .top{grid-template-columns:1fr 1fr}
     .center{grid-column:1/3;grid-row:1}
     .goal{grid-column:1/3;max-width:none}
     .row{grid-template-columns:92px 1fr 34px;gap:8px}
-    .vid{grid-template-columns:84px 1fr 64px}
+    .vid{grid-template-columns:100px 1fr}
   }
   @media (prefers-reduced-motion:no-preference){ .row{animation:in .2s ease-out} @keyframes in{from{opacity:0;transform:translateY(-4px)}} }
 </style>
@@ -130,11 +132,6 @@
       <ul id="goalList"></ul>
       <input type="text" id="goalNew" placeholder="+ नया लक्ष्य लिखो, फिर Enter दबाओ">
     </div>
-  </div>
-
-  <div class="meta">
-    <label>Video (वीडियो):<input type="text" id="title" placeholder="वीडियो का नाम / टॉपिक"></label>
-    <label>Views (व्यूज़):<input type="number" id="views" min="0" placeholder="आने पर भरो"></label>
   </div>
 
   <div class="entries box" id="entries"></div>
@@ -190,7 +187,7 @@
     const d=parse(cur);
     $('goalTitle').textContent=MON[d.getMonth()]+' Goal ('+HMON[d.getMonth()]+' का लक्ष्य)';
     const x=day();
-    $('title').value=x.title||''; $('views').value=x.views===''?'':x.views; $('result').value=x.result||'';
+    $('result').value=x.result||'';
     grow($('result'));
   }
   function tickClock(){ $('clock').textContent='Time '+fmt12(nowHHMM()); }
@@ -221,14 +218,15 @@
   function renderEntries(){
     const list=day().entries;
     if(!list.length){
-      $('entries').innerHTML='<div class="empty">अभी कुछ नहीं लिखा है। ऊपर <b>Time</b> दबाओ और लिखो क्या कर रहे हो, या <b>Thumbnail</b> दबाओ और लिखो कि थंबनेल क्या सोचकर बनाया।</div>';
+      $('entries').innerHTML='<div class="empty">अभी कुछ नहीं लिखा है। ऊपर <b>Time</b> दबाओ और लिखो अभी क्या कर रहे हो और ये वीडियो क्यों बना रहे हो। फिर <b>Thumbnail</b> दबाओ और लिखो कि थंबनेल ऐसा क्यों बनाया।</div>';
       return;
     }
     $('entries').innerHTML=list.map(en=>{
       if(en.type==='time'){
         return `<div class="row" data-id="${en.id}">
           <div class="tag box"><input type="time" data-f="time" value="${esc(en.time)}" aria-label="Time"></div>
-          <textarea data-f="text" rows="1" placeholder="इस समय में स्क्रिप्ट लिख रहा हूँ... देखता हूँ कितना समय लगेगा">${esc(en.text)}</textarea>
+          <div><textarea data-f="text" rows="1" placeholder="अभी क्या कर रहा हूँ? ये वीडियो क्यों बना रहा हूँ? स्क्रिप्ट ऐसी क्यों लिखी?">${esc(en.text)}</textarea>
+            <label class="vw">Views (व्यूज़):<input type="number" min="0" data-f="views" value="${esc(en.views)}" placeholder="आने पर भरो"></label></div>
           <button class="del" data-del aria-label="हटाओ">×</button></div>`;
       }
       return `<div class="row" data-id="${en.id}">
@@ -236,7 +234,7 @@
         <div class="thumbcol">
           ${en.img?`<img class="thumbimg" src="${en.img}" alt="थंबनेल">`:''}
           <label class="pick"><input type="file" accept="image/*" data-img>${en.img?'फोटो बदलो':'+ थंबनेल की फोटो लगाओ'}</label>
-          <textarea data-f="text" rows="1" placeholder="यह थंबनेल क्या सोचकर बनाया? कौन सा टेक्स्ट, रंग, चेहरा, और क्यों?">${esc(en.text)}</textarea>
+          <textarea data-f="text" rows="1" placeholder="इस वीडियो का थंबनेल ऐसा क्यों बनाया? क्या सोचकर बनाया? (टेक्स्ट, रंग, चेहरा, और क्यों)">${esc(en.text)}</textarea>
         </div>
         <button class="del" data-del aria-label="हटाओ">×</button></div>`;
     }).join('');
@@ -293,8 +291,6 @@
   $('addThumb').onclick=()=>add('thumb');
 
   /* ---------- day meta ---------- */
-  $('title').addEventListener('input',e=>{day().title=e.target.value;save()});
-  $('views').addEventListener('input',e=>{day().views=e.target.value===''?'':Number(e.target.value);save();if($('all').classList.contains('open'))renderAll()});
   $('result').addEventListener('input',e=>{day().result=e.target.value;grow(e.target);save()});
 
   function go(k){ cur=k; renderAll_(); }
@@ -304,19 +300,16 @@
 
   /* ---------- all videos ---------- */
   function renderAll(){
-    const keys=Object.keys(db.days).filter(k=>{
-      const d=db.days[k]; return d.title||d.views!==''||d.result||(d.entries&&d.entries.length);
-    }).sort().reverse();
+    const keys=Object.keys(db.days).filter(k=>{const d=db.days[k];return d.result||(d.entries&&d.entries.length)}).sort().reverse();
     if(!keys.length){ $('all').innerHTML='<div class="empty">अभी कोई वीडियो नहीं लिखा।</div>'; return; }
-    let best=null,bv=-1; keys.forEach(k=>{const v=Number(db.days[k].views);if(db.days[k].views!==''&&v>bv){bv=v;best=k}});
+    let bv=0,bid=null;
+    keys.forEach(k=>db.days[k].entries.forEach(e=>{const v=Number(e.views);if(e.type==='time'&&v>bv){bv=v;bid=e.id}}));
     $('all').innerHTML=keys.map(k=>{
-      const d=db.days[k], th=d.entries.filter(e=>e.type==='thumb').length, tm=d.entries.filter(e=>e.type==='time').length;
-      return `<div class="vid" data-k="${k}">
-        <div>${pretty(k)}</div>
-        <div>${esc(d.title||'(नाम नहीं)')} ${k===best&&bv>0?'<span class="best">सबसे ज़्यादा व्यूज़</span>':''}</div>
-        <div class="v">${d.views===''?'-':Number(d.views).toLocaleString('en-IN')}</div>
-        <div class="sub">${tm} समय की एंट्री, ${th} थंबनेल${d.result?' | '+esc(d.result.slice(0,90))+(d.result.length>90?'...':''):''}</div>
-      </div>`;
+      const d=db.days[k], rows=d.entries.map(e=>{
+        if(e.type==='time') return `<div class="sub">${fmt12(e.time)} - ${esc((e.text||'(खाली)').slice(0,110))}${(e.text||'').length>110?'...':''} <b>${e.views!==''&&e.views!=null?Number(e.views).toLocaleString('en-IN')+' व्यूज़':''}</b> ${e.id===bid?'<span class="best">सबसे ज़्यादा व्यूज़</span>':''}</div>`;
+        return `<div class="sub">थंबनेल: ${esc((e.text||'(खाली)').slice(0,110))}</div>`;
+      }).join('');
+      return `<div class="vid" data-k="${k}"><div><b>${pretty(k)}</b></div><div>${d.entries.filter(e=>e.type==='time').length} वीडियो/एंट्री</div>${rows}</div>`;
     }).join('');
   }
   $('all').addEventListener('click',e=>{ const v=e.target.closest('.vid'); if(v){ go(v.dataset.k); window.scrollTo({top:0,behavior:'smooth'}); } });
