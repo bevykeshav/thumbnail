@@ -1,355 +1,348 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="utf-8">
-<title>Thumbnail Style Studio</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;700&display=swap">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video Diary</title>
 <style>
-:root{--bg:#E8EBF0;--sf:#fff;--ink:#101828;--mu:#5B6577;--ln:#CBD2DC;--ac:#FFC800;--rd:#C6281C;--ok:#0F7B4B;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1117;--sf:#171B24;--ink:#EEF1F6;--mu:#98A2B3;--ln:#2C3340;--rd:#FF8A80;--ok:#5FD39B}}
-:root[data-theme="dark"]{--bg:#0E1117;--sf:#171B24;--ink:#EEF1F6;--mu:#98A2B3;--ln:#2C3340;--rd:#FF8A80;--ok:#5FD39B}
-*{box-sizing:border-box}
-html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif}
-h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;margin:0}
-header,main{max-width:1200px;margin:auto;padding-left:20px;padding-right:20px}
-header{padding-top:28px}
-h1{font-size:clamp(28px,5vw,44px);font-weight:800;letter-spacing:-.02em}
-.sub{color:var(--mu);margin:6px 0 0}
-main{display:grid;gap:16px;padding-top:16px;padding-bottom:40px}
-.card{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:16px}
-h2{font-size:19px;margin-bottom:10px}
-h3{font-size:17px;margin-bottom:6px}
-.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
-.bar>div{flex:1;min-width:220px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-label{display:block;font-weight:700;font-size:14px;margin:10px 0 3px}
-label small{font-weight:400;color:var(--mu)}
-input[type=text],select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--ln);border-radius:8px;padding:8px 10px}
-textarea{resize:vertical}
-input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid var(--ac);outline-offset:1px}
-.pnl{border-top:5px solid var(--ac)}
-button{font:inherit;font-weight:700;cursor:pointer;border-radius:8px;border:1.5px solid var(--ink);background:var(--sf);color:var(--ink);padding:9px 16px}
-button.pri{background:var(--ac);color:#101828;border-color:var(--ac)}
-button.dg{color:var(--rd);border-color:var(--rd)}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-#out,#newJson{width:100%;font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;background:var(--bg);color:var(--ink);border:1.5px solid var(--ln);border-radius:8px;padding:10px;resize:vertical}
-.mu{color:var(--mu);font-size:14px}
-.err{color:var(--rd);font-size:14px;min-height:1px;margin-top:8px}
-.lf{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--ln)}
-.lf input{margin-top:5px;width:18px;height:18px;flex:none}
-.lf code{font:13px ui-monospace,Menlo,Consolas,monospace;font-weight:700}
-.lf span{display:block;color:var(--mu);font-size:14px;word-break:break-word}
-[hidden]{display:none!important}
+  :root{
+    --paper:#fbfaf6; --line:#cfe0ee; --ink:#3a2fa6; --ink-soft:#6b62c9; --margin:#e2a0a0;
+    --bg:#2b2a33; --ok:#1f7a4d; --warn:#b3261e;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Segoe UI",Roboto,"Noto Sans Devanagari","Nirmala UI",Arial,sans-serif; font-size:17px; line-height:1.5;
+    padding:14px;
+  }
+  .notebook{
+    max-width:980px; margin:0 auto; background:var(--paper); border-radius:6px;
+    padding:20px 22px 28px 46px; position:relative; min-height:92vh;
+    background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,var(--line) 31px,var(--line) 32px);
+    box-shadow:0 6px 24px rgba(0,0,0,.4);
+  }
+  .notebook::before{content:"";position:absolute;left:34px;top:0;bottom:0;width:2px;background:var(--margin)}
+  .holes{position:absolute;left:8px;top:0;bottom:0;width:14px;
+    background:radial-gradient(circle 6px at 7px 18px,#2b2a33 98%,transparent) 0 0/14px 64px repeat-y}
+
+  /* hand-drawn box */
+  .box{border:2px solid var(--ink);border-radius:255px 12px 225px 12px/12px 225px 12px 255px;background:var(--paper)}
+  button{font:inherit;color:var(--ink);cursor:pointer}
+  button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #f0a500;outline-offset:2px}
+
+  /* top row, as in the notebook */
+  .top{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;margin-bottom:16px}
+  .tbtn{padding:4px 16px;font-weight:700;font-size:19px;background:var(--paper)}
+  .tbtn:hover{background:#ece9ff}
+  .tbtn small{display:block;font-weight:400;font-size:12px;color:var(--ink-soft)}
+  .center{text-align:center}
+  .datebar{display:flex;align-items:center;justify-content:center;gap:8px}
+  .datebar button.nav{border:0;background:none;font-size:26px;padding:0 6px}
+  #dateShow{font-size:26px;font-weight:700;cursor:pointer;position:relative}
+  #datePick{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
+  .center .timebtn{margin-top:4px}
+  .goal{padding:6px 12px 8px;min-width:210px;max-width:260px}
+  .goal h3{margin:0 0 2px;font-size:19px}
+  .goal ul{list-style:none;margin:0;padding:0}
+  .goal li{display:flex;gap:6px;align-items:center;font-size:16px}
+  .goal li.done span{text-decoration:line-through;opacity:.55}
+  .goal li button{border:0;background:none;font-size:14px;opacity:.5;padding:0 2px}
+  .goal input[type=text]{width:100%;border:0;border-bottom:1.5px dashed var(--ink-soft);background:transparent;font:inherit;font-size:15px;color:var(--ink);margin-top:4px}
+
+  /* day meta */
+  .meta{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:6px 0 14px}
+  .meta label{display:flex;gap:6px;align-items:center}
+  .meta input{font:inherit;color:var(--ink);background:transparent;border:0;border-bottom:2px solid var(--ink);padding:0 4px}
+  #title{flex:1;min-width:200px}
+  #views{width:110px}
+
+  /* entries */
+  .entries{padding:10px 12px;min-height:240px}
+  .row{display:grid;grid-template-columns:118px 1fr 28px;gap:12px;padding:6px 0;align-items:start}
+  .row+.row{border-top:1.5px dashed var(--line)}
+  .tag{padding:2px 8px;text-align:center;font-weight:700;background:var(--paper)}
+  .tag input{font:inherit;font-weight:700;color:var(--ink);background:transparent;border:0;width:100%;text-align:center}
+  .row textarea{width:100%;font:inherit;color:var(--ink);background:transparent;border:0;resize:none;overflow:hidden;min-height:34px;line-height:1.55}
+  .row textarea::placeholder{color:#9a94d6}
+  .del{border:2px solid var(--warn);background:#fff;color:var(--warn);font-size:18px;font-weight:700;line-height:1;width:30px;height:30px;border-radius:50%;padding:0;cursor:pointer}
+  .del:hover{background:var(--warn);color:#fff}
+  #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2b2a33;color:#fff;padding:10px 16px;border-radius:8px;display:none;gap:14px;align-items:center;z-index:50;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+  #toast.show{display:flex}
+  #toast button{background:none;border:0;color:#ffd166;font-weight:700;font-size:17px;cursor:pointer}
+  .thumbcol{display:flex;flex-direction:column;gap:6px}
+  .thumbimg{max-width:300px;width:100%;border:2px solid var(--ink);border-radius:6px;display:block}
+  .pick{display:inline-block;border:1.5px dashed var(--ink-soft);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:15px;width:fit-content}
+  .pick input{display:none}
+  .empty{padding:26px 8px;color:var(--ink-soft);text-align:center}
+
+  /* result */
+  .result{margin-top:16px;padding:10px 14px}
+  .result h3{margin:0 0 4px;font-size:19px}
+  .result textarea{width:100%;font:inherit;color:var(--ink);background:transparent;border:0;resize:none;overflow:hidden;min-height:60px}
+
+  /* all videos */
+  .tools{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .tools button{padding:3px 14px;background:var(--paper)}
+  .tools button:hover{background:#ece9ff}
+  #all{margin-top:14px;padding:10px 14px;display:none}
+  #all.open{display:block}
+  .vid{display:grid;grid-template-columns:110px 1fr 90px;gap:10px;padding:6px 0;cursor:pointer;align-items:center}
+  .vid+.vid{border-top:1.5px dashed var(--line)}
+  .vid:hover{background:#f1efff}
+  .vid .v{text-align:right;font-weight:700}
+  .vid .sub{font-size:14px;color:var(--ink-soft);grid-column:2/4}
+  .best{color:var(--ok);font-size:14px}
+
+  @media (max-width:720px){
+    body{padding:6px;font-size:17px}
+    .notebook{padding:14px 12px 24px 34px}
+    .notebook::before{left:26px}
+    .top{grid-template-columns:1fr 1fr}
+    .center{grid-column:1/3;grid-row:1}
+    .goal{grid-column:1/3;max-width:none}
+    .row{grid-template-columns:92px 1fr 34px;gap:8px}
+    .vid{grid-template-columns:84px 1fr 64px}
+  }
+  @media (prefers-reduced-motion:no-preference){ .row{animation:in .2s ease-out} @keyframes in{from{opacity:0;transform:translateY(-4px)}} }
 </style>
 </head>
 <body>
-<header>
-<h1>Thumbnail Style Studio</h1>
-<p class="sub">Style chuno, naam aur text bharo, naya JSON copy karke ChatGPT mein lagao.</p>
-</header>
-<main>
-<section class="card">
-<div class="bar">
-<div><label for="styleSel" style="margin-top:0">Thumbnail style</label><select id="styleSel"></select></div>
-<button id="addBtn" type="button">Naya style jodo</button>
-<button id="delBtn" type="button" class="dg" hidden>Ye style hatao</button>
-</div>
-</section>
+<div class="notebook">
+  <div class="holes" aria-hidden="true"></div>
 
-<section class="card" id="addBox" hidden>
-<h2>Naya style jodo</h2>
-<p class="mu">1. Thumbnail ka JSON paste karo. 2. “Fields dhoondo” dabao aur jo cheezein har baar badalni hain unpar tick lagao. 3. Naam likhke save karo.</p>
-<textarea id="newJson" rows="9" placeholder="Yahan thumbnail ka JSON paste karo"></textarea>
-<div class="row"><button id="scan" type="button" class="pri">Fields dhoondo</button></div>
-<div class="err" id="addErr" role="alert"></div>
-<div id="leaves"></div>
-<div id="saveRow" hidden>
-<label for="newName">Style ka naam</label><input type="text" id="newName" placeholder="jaise: Result Day Red">
-<div class="row"><button id="saveStyle" type="button" class="pri">Style save karo</button></div>
-</div>
-</section>
+  <div class="top">
+    <button class="tbtn box" id="addThumb" title="क्लिक करते ही नीचे थंबनेल की एंट्री आ जाएगी">Thumbnail (थंबनेल)<small>क्लिक करो = नीचे जुड़ेगा</small></button>
 
-<div class="grid" id="fields"></div>
+    <div class="center">
+      <div class="datebar">
+        <button class="nav" id="prev" aria-label="पिछला दिन">‹</button>
+        <div id="dateShow"><span id="dateText"></span><input type="date" id="datePick" aria-label="तारीख चुनो"></div>
+        <button class="nav" id="next" aria-label="अगला दिन">›</button>
+      </div>
+      <button class="tbtn box timebtn" id="addTime" title="क्लिक करते ही अभी का समय नीचे आ जाएगा">
+        <span id="clock">Time</span><small>क्लिक करो = नीचे जुड़ेगा</small>
+      </button>
+    </div>
 
-<section class="card">
-<h2>Naya JSON</h2>
-<textarea id="out" rows="18" readonly></textarea>
-<div class="row">
-<button class="pri" id="copyPrompt" type="button">ChatGPT ke liye copy karo</button>
-<button id="copy" type="button">Sirf JSON copy karo</button>
-<button id="dl" type="button">JSON file download karo</button>
-<button id="resetVals" type="button">Boxes pehle jaise karo</button>
-</div>
-<p class="mu">“ChatGPT ke liye copy karo” JSON ke saath “is JSON ke hisaab se thumbnail banao” bhi jod deta hai.</p>
-</section>
+    <div class="goal box">
+      <h3 id="goalTitle">Goal</h3>
+      <ul id="goalList"></ul>
+      <input type="text" id="goalNew" placeholder="+ नया लक्ष्य लिखो, फिर Enter दबाओ">
+    </div>
+  </div>
 
-<section class="card">
-<h2>Backup</h2>
-<p class="mu">Saved styles sirf is browser mein rehte hain. Doosre device par le jaane ke liye backup download karo aur wahan restore karo.</p>
-<div class="row">
-<button id="bk" type="button">Backup download karo</button>
-<button id="rs" type="button">Backup se restore karo</button>
-<input type="file" id="rsFile" accept=".json,application/json" hidden>
+  <div class="meta">
+    <label>Video (वीडियो):<input type="text" id="title" placeholder="वीडियो का नाम / टॉपिक"></label>
+    <label>Views (व्यूज़):<input type="number" id="views" min="0" placeholder="आने पर भरो"></label>
+  </div>
+
+  <div class="entries box" id="entries"></div>
+
+  <div class="result box">
+    <h3>Views आने के बाद: क्या काम किया?</h3>
+    <textarea id="result" placeholder="किस स्क्रिप्ट की लाइन या थंबनेल के आइडिया से व्यूज़ आए? यहाँ लिखो ताकि अगली बार वही दोहरा सको।"></textarea>
+  </div>
+
+  <div class="tools">
+    <button class="box" id="toggleAll">सारे वीडियो और व्यूज़</button>
+    <button class="box" id="export">बैकअप डाउनलोड करो</button>
+    <button class="box" id="importBtn">बैकअप वापस लाओ</button>
+    <input type="file" id="importFile" accept="application/json" hidden>
+  </div>
+  <div class="box" id="all"></div>
 </div>
-<div class="err" id="bkMsg"></div>
-</section>
-</main>
+
+<div id="toast" role="status"></div>
 <script>
-const $=s=>document.querySelector(s);
-const PH=/\{\{\s*([^{}\s]+)\s*\}\}/g;
-const SECT=[
- ['Semiconductor / Chip','purple and magenta glowing circuit board with tiny electronic components and neon traces, a large black semiconductor chip in the middle with the company name printed on it in white, a bright green upward arrow at the bottom right. Colour theme: deep purple, magenta and neon pink with a green arrow accent'],
- ['AI / Data center / IT','rows of glowing blue server racks in a dark data center, a bright glowing blue AI processor chip with the letters AI in front, faint cyan rising candlestick chart lines in the upper right. Colour theme: deep navy blue and electric cyan'],
- ['Defence','fighter jets, a drone, radar dishes and a missile launcher on a dark battlefield horizon, cloudy grey-blue sky, green and red candlestick chart lines in the background. Colour theme: steel grey, olive green and cool blue with orange highlights'],
- ['Aerospace / Electronics manufacturing','a white passenger airliner on the left, a fighter jet and drone flying on the right, heavy metallic aerospace and electronics machinery in the foreground, cloudy grey-blue sky, green and red candlestick chart lines in the background. Colour theme: steel grey, silver and cool blue, brighter at the top'],
- ['Shipbuilding / Naval','a large grey naval warship at a dockyard with tall cranes, ocean at sunset with blue and orange sky, glowing candlestick chart lines rising in the background. Colour theme: navy blue, steel grey and sunset orange'],
- ['Auto / EV','a sleek electric car with glowing headlights on a futuristic road, charging station with neon light, green candlestick chart lines rising in the background. Colour theme: dark teal, electric green and silver'],
- ['Pharma / Healthcare','a modern laboratory with glowing glass flasks, floating capsules and a DNA helix, clean blue and white light, green candlestick chart lines in the background. Colour theme: clean blue, white and mint green'],
- ['Bank / Finance','tall glass bank skyscrapers, golden coins and rupee symbols floating, a rising green candlestick chart in the background. Colour theme: deep blue and gold'],
- ['Energy / Solar / Power','solar panel fields and wind turbines at golden hour, glowing power lines, green candlestick chart lines rising in the background. Colour theme: bright yellow, sky blue and green'],
- ['Railway / Infra','a modern bullet train speeding on an elevated track at dusk with glowing lights, steel bridge and city skyline, rising candlestick chart lines in the background. Colour theme: cool blue, white and orange']
-];
-const LOGO=[
- 'company name in huge bold white italic sans-serif with soft drop shadow, subtext (if any) in small widely spaced white capitals directly below',
- 'company name in dark navy wide bold capitals, if subtext exists a thin vertical divider line then the subtext in bright blue bold capitals; light white-grey fade behind the logo so it stays readable',
- 'company name in huge chunky rounded white capitals with soft shadow, top right'
-];
-const POS=['left panel','center panel','right panel'];
-const GN=['Left panel','Beech wala panel','Right panel'];
-const DEFC=[['Netweb','TECHNOLOGIES',SECT[1][1]],['CYIENT','DLM',SECT[3][1]],['MOSCHIP','',SECT[0][1]]];
-const BI={id:'tech3',name:'3 TECH STOCKS (Q2 Results)',builtin:true,
- template:{
-  task:'Create a high-CTR YouTube thumbnail for an Indian stock market video, exactly in the layout and style described below. Only the items marked as changeable should differ from this description.',
-  canvas:{aspect_ratio:'16:9',size:'1672x941',quality:'ultra sharp, high contrast, saturated colors, professional finance news thumbnail'},
-  companies:POS.map((p,i)=>({position:p,company_name:'{{c'+(i+1)+'_name}}',company_subtext:'{{c'+(i+1)+'_sub}}',logo_style:LOGO[i],background_scene:'{{c'+(i+1)+'_scene}}'})),
-  panel_layout:{structure:'three vertical panels side by side in the top 60 percent of the image, separated by thin slanted white edges so the center panel looks like a trapezoid, the center panel is a little brighter and on top',company_swap_rule:'Each panel must clearly show its own company logo text, subtext and background scene. Keep the layout, fonts, positions, text colors and effects unchanged.'},
-  center_badge:{top_text:'{{badge_top}}',bottom_text:'{{badge_bottom}}',style:'black rounded rectangle with thin white border at the center top of the center panel, containing very large glossy yellow-orange gradient top text with thick black outline; below it a glowing red ribbon banner with white bold bottom text with black outline'},
-  headline:{text_main:'{{headline}}',style:'extra large ultra bold italic capitals across the full width near the bottom third, the first number in glossy yellow-orange gradient and much larger, the middle word in white, the last word in glossy yellow, every letter with thick black outline, strong drop shadow and slight 3D look',behind_text:'a thick red torn brush-stroke banner with rough edges and a red glow behind the whole headline'},
-  subheadline:{text:'{{subheadline}}',language:'Hindi (Devanagari)',style:'large bold Hindi text inside a dark black-green rectangular bar with a thin glowing neon green border, below the headline, first words in white and last words in bright yellow, thick black outline'},
-  bottom_background:{description:'dark navy to black base with glowing green candlestick chart rising at the bottom left and bottom right corners, subtle glow'},
-  color_palette:{headline_yellow:'#FFD400',headline_white:'#FFFFFF',banner_red:'#D91E18',neon_green:'#22E65A',panel_blue:'#0A3FA8',panel_purple:'#8A2BE2',dark_base:'#050B1A'},
-  rules:['Write all text exactly as given, with correct spelling','Hindi text must be in clean Devanagari, no broken or garbled letters','Do not add any extra text, watermark or people','Keep every text very large and readable even at small mobile size','Keep the same layout, fonts, effects and positions every time']
- },
- fields:[
-  {key:'headline',label:'Bada headline',group:'Video ka text',type:'text',def:'3 TECH STOCKS'},
-  {key:'subheadline',label:'Hindi line (neeche wali)',group:'Video ka text',type:'text',def:'कहां है बड़ा मौका ?',texts:true},
-  {key:'badge_top',label:'Badge ka bada text',group:'Video ka text',type:'text',def:'Q2'},
-  {key:'badge_bottom',label:'Laal ribbon ka text',group:'Video ka text',type:'text',def:'RESULTS'},
-  ...[0,1,2].flatMap(i=>[
-   {key:'c'+(i+1)+'_name',label:'Company ka naam',group:GN[i],type:'text',def:DEFC[i][0]},
-   {key:'c'+(i+1)+'_sub',label:'Chhota text neeche (optional)',group:GN[i],type:'text',def:DEFC[i][1]},
-   {key:'c'+(i+1)+'_scene',label:'Background scene',group:GN[i],type:'textarea',def:DEFC[i][2],presets:true}
-  ])
- ]};
+(function(){
+  const KEY='videoDiaryV1';
+  let db={days:{},goals:{}};
+  try{ const s=localStorage.getItem(KEY); if(s) db=JSON.parse(s); }catch(e){}
+  db.days=db.days||{}; db.goals=db.goals||{};
 
-const TTL='huge white bold italic condensed capitals with thick black outline and soft glow, sized so the whole word fits inside the panel width';
-const SEC2='huge glossy yellow-orange gradient bold italic capitals with thick black outline and strong drop shadow';
-const D2=[['DEFENCE','dark red','a grey fighter jet taking off on the left against a fiery orange sunset sky, a military radar truck and missile launchers on the ground, a robotic arm machine at the far left, dramatic warm light'],
- ['SEMICONDUCTOR','deep blue','a large glowing black semiconductor chip in the center of a dark blue circuit board with bright neon blue glowing traces and small electronic components, bright blue light glow around the chip edges'],
- ['SHIPBUILDING','dark green','a large grey naval warship docked at a dockyard with two tall yellow cranes on both sides, golden sunset sky and clouds, calm water reflecting the light']];
-const BI2={id:'damdar3',name:'3 दमदार STOCK (Sector wale)',builtin:true,
- template:{
-  task:'Create a high-CTR YouTube thumbnail for an Indian stock market video, exactly in the layout and style described below. Only the items marked as changeable should differ from this description.',
-  canvas:{aspect_ratio:'16:9 (YouTube thumbnail)',quality:'ultra sharp, high contrast, saturated colors, cinematic lighting, professional finance news thumbnail'},
-  top_headline:{text:'{{top_text}}',style:'huge ultra bold italic capitals across the top, the first number in glossy yellow-orange gradient and much larger, the middle Hindi word in white bold Devanagari, the last word in glossy yellow italic, every letter with thick black outline and subtle glow',behind_text:'a black torn brush-stroke banner across the full top with rough edges and a thin glowing orange line under it'},
-  green_arrow:'a bright neon green zigzag arrow with glow at the top right pointing up and to the right, over small green candlesticks',
-  panel_layout:{structure:'three equal vertical panels side by side filling the area below the top headline, separated by thin glowing slanted divider lines: orange-red between the first and second panel, green between the second and third',
-   text_position:'in each panel the two text lines sit at the top, the scene photo fills the lower half'},
-  panels:[0,1,2].map(i=>({position:POS[i],title_text:'{{p'+(i+1)+'_title}}',title_style:TTL,second_line_text:'{{p'+(i+1)+'_second}}',second_line_style:SEC2,
-   banner:'a torn brush-stroke banner in {{p'+(i+1)+'_colour}} behind the two text lines, with rough edges and a soft glow of the same color',
-   background_scene:'{{p'+(i+1)+'_scene}}'})),
-  bottom_background:{details:'dark navy to black base, faint stock ticker numbers and small red and green candlesticks along the left and right edges'},
-  rules:['Write all text exactly as given, with correct spelling','Hindi text must be in clean Devanagari, no broken or garbled letters','Do not add any extra text, watermark or people','Keep every text very large and readable even at small mobile size','Keep the same layout, fonts, effects and positions every time']
- },
- fields:[
-  {key:'top_text',label:'Upar ka bada headline',group:'Video ka text',type:'text',def:'3 दमदार STOCK',texts:true},
-  ...[0,1,2].flatMap(i=>[
-   {key:'p'+(i+1)+'_title',label:'Pehli line (sector ka naam)',group:GN[i],type:'text',def:D2[i][0]},
-   {key:'p'+(i+1)+'_second',label:'Doosri line (peela text)',group:GN[i],type:'text',def:'STOCK'},
-   {key:'p'+(i+1)+'_colour',label:'Text ke peeche ka rang',group:GN[i],type:'text',def:D2[i][1]},
-   {key:'p'+(i+1)+'_scene',label:'Neeche ka scene',group:GN[i],type:'textarea',def:D2[i][2],presets:true}
-  ])
- ]};
+  const $=id=>document.getElementById(id);
+  const pad=n=>String(n).padStart(2,'0');
+  const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const HMON=['जनवरी','फ़रवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर'];
+  const MONF=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  const parse=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
+  const pretty=k=>{const d=parse(k);return d.getDate()+' '+MON[d.getMonth()]+' '+d.getFullYear()};
+  const nowHHMM=()=>{const d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes())};
+  const fmt12=t=>{if(!t)return'';const [h,m]=t.split(':').map(Number);return (h%12||12)+':'+pad(m)+' '+(h<12?'AM':'PM')};
 
-const TXT=[
- {g:'Thumbnail ke ideas',t:[
-  '4 बड़ी खबर, 3 बड़ी खबर (हो गया फैसला)',
-  'जल्दी करो बड़ा मौका',
-  'अब Loss नहीं होगा',
-  'State का नाम (बड़ा आइडिया दिया)',
-  'अभी-अभी आई बड़ी खबर',
-  'festival का नाम (के बाद आई बड़ी खबर)',
-  'बाजार में हाहाकार',
-  'जबरदस्त खुशखबरी आ गई',
-  'Investor सावधान',
-  'होश उड़ा देगी यह खबर',
-  'खबर जिसका इंतजार था!',
-  'Credit Rating',
-  'नया इतिहास रच दिया',
-  'खेल का पर्दाफाश',
-  'बहुत बड़ा खुलासा',
-  'घोटाले का खुलासा',
-  'Company का नाम (ने किया हैरान करने वाला फैसला)',
-  'Notice आया, मैनेजमेंट का बड़ा बयान, CEO का बयान'
- ]},
- {g:'Vodafone ke liye',t:[
-  'कंपनी ने बदली रणनीति',
-  'TARGET 65 जाने वाला है!',
-  'दिग्गजों ने दिया भयंकर संकेत',
-  'सरकार का प्लान',
-  'होश उड़ा देगी ये खबर',
-  'सरकार ने बेवकूफ बनाया',
-  'FII ने सबको चौंकाया',
-  'नया प्लान का खुलासा',
-  'USA का खुलासा',
-  'बिरला ने खरीद ली पूरी कंपनी',
-  '2:1 BONUS + BUYBACK',
-  'भारत सरकार का साथ मिला फिर से शेयर बढ़ेगा SC का Action',
-  'पूरा निचोड़ एक video में दिवाली से पहले खरीदने की सलाह',
-  'Finally Company कर्ज FREE हो गयी, अभी-२ आई बड़ी खबर',
-  'Investor के लिए खुशखबरी दिवाली से पहले खरीदने की सलाह'
- ]}
-];
-let S=load();
-function load(){try{const d=JSON.parse(localStorage.getItem('tsStudio')||'null');if(d&&Array.isArray(d.styles))return d;}catch(e){}return{styles:[],vals:{},cur:'tech3'};}
-function persist(){try{localStorage.setItem('tsStudio',JSON.stringify(S));}catch(e){}}
-const all=()=>[BI,BI2,...S.styles];
-const cur=()=>all().find(s=>s.id===S.cur)||BI;
-function drawSel(){
- const sel=$('#styleSel');sel.replaceChildren();
- all().forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;sel.append(o);});
- sel.value=cur().id;$('#delBtn').hidden=!!cur().builtin;
-}
-function drawFields(){
- const st=cur(),v=S.vals[st.id]=S.vals[st.id]||{},box=$('#fields');box.replaceChildren();
- [...new Set(st.fields.map(f=>f.group))].forEach(g=>{
-  const c=document.createElement('section');c.className='card pnl';
-  const h=document.createElement('h3');h.textContent=g;c.append(h);
-  st.fields.filter(f=>f.group===g).forEach((f,n)=>{
-   if(v[f.key]===undefined)v[f.key]=f.def||'';
-   const id='f_'+f.key;
-   const l=document.createElement('label');l.htmlFor=id;l.textContent=f.label;c.append(l);
-   const inp=document.createElement(f.type==='textarea'?'textarea':'input');
-   inp.id=id;if(f.type==='textarea')inp.rows=5;else inp.type='text';
-   inp.value=v[f.key];
-   inp.oninput=()=>{v[f.key]=inp.value;render();};
-   if(f.presets){
-    const ps=document.createElement('select');ps.setAttribute('aria-label','Taiyaar scene chuno');
-    ps.innerHTML='<option value="">Taiyaar scene chuno (company ka kaam)</option>'+SECT.map((x,i)=>'<option value="'+i+'">'+x[0]+'</option>').join('');
-    ps.onchange=()=>{if(ps.value!==''){inp.value=SECT[+ps.value][1];v[f.key]=inp.value;render();ps.value='';}};
-    c.append(ps);
-   }
-   if(f.texts){
-    const ts=document.createElement('select');ts.setAttribute('aria-label','Taiyaar text chuno');
-    ts.innerHTML='<option value="">Taiyaar text chuno (apni list se)</option>'+TXT.map(g=>'<optgroup label="'+g.g+'">'+g.t.map(x=>'<option>'+x+'</option>').join('')+'</optgroup>').join('');
-    ts.onchange=()=>{if(ts.value){inp.value=ts.value;v[f.key]=inp.value;render();ts.value='';}};
-    c.append(ts);
-   }
-   c.append(inp);
-  });
-  box.append(c);
- });
- render();
-}
-function fill(n,v){
- if(typeof n==='string')return n.replace(PH,(m,k)=>v[k]===undefined?'':v[k]);
- if(Array.isArray(n))return n.map(x=>fill(x,v));
- if(n&&typeof n==='object'){const o={};for(const k of Object.keys(n))o[k]=fill(n[k],v);return o;}
- return n;
-}
-function render(){
- const st=cur();$('#out').value=JSON.stringify(fill(st.template,S.vals[st.id]||{}),null,2);persist();
-}
-$('#styleSel').onchange=e=>{S.cur=e.target.value;drawSel();drawFields();};
-$('#resetVals').onclick=()=>{S.vals[cur().id]={};drawFields();};
-async function copyText(t,btn,label){
- try{await navigator.clipboard.writeText(t);}catch(e){const o=$('#out');o.removeAttribute('readonly');o.select();document.execCommand('copy');o.setAttribute('readonly','');}
- btn.textContent='Copy ho gaya';setTimeout(()=>btn.textContent=label,1500);
-}
-$('#copy').onclick=e=>copyText($('#out').value,e.target,'Sirf JSON copy karo');
-$('#copyPrompt').onclick=e=>copyText('Is JSON ke hisaab se thumbnail banao:\n\n'+$('#out').value,e.target,'ChatGPT ke liye copy karo');
-function dlFile(name,text){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'application/json'}));a.download=name;document.body.append(a);a.click();a.remove();}
-$('#dl').onclick=()=>dlFile('thumbnail-'+cur().name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.json',$('#out').value);
+  let cur=ymd(new Date());
 
-/* naya style jodna */
-let draft=null,leaves=[];
-$('#addBtn').onclick=()=>{$('#addBox').hidden=!$('#addBox').hidden;};
-function scan(n,p){
- if(typeof n==='string')leaves.push({p,v:n});
- else if(n&&typeof n==='object')Object.keys(n).forEach(k=>scan(n[k],[...p,Array.isArray(n)?+k:k]));
-}
-const LIKE=/name|text|title|headline|company|subtext|scene|description|label|caption|slogan|subtitle/i;
-const SKIP=/style|rule|language|palette|canvas|layout|task|quality/i;
-$('#scan').onclick=()=>{
- const err=$('#addErr');err.textContent='';
- try{draft=JSON.parse($('#newJson').value);}catch(e){err.textContent='JSON sahi nahi hai: '+e.message;return;}
- leaves=[];scan(draft,[]);
- const box=$('#leaves');box.replaceChildren();
- if(!leaves.length){err.textContent='Is JSON mein koi text field nahi mila.';$('#saveRow').hidden=true;return;}
- leaves.forEach((x,i)=>{
-  const has=/\{\{[^{}]+\}\}/.test(x.v);
-  x.on=has||(LIKE.test(String(x.p[x.p.length-1]))&&!x.p.some(s=>SKIP.test(String(s))));
-  const r=document.createElement('label');r.className='lf';r.style.fontWeight='400';
-  const cb=document.createElement('input');cb.type='checkbox';cb.checked=x.on;cb.disabled=has;
-  cb.onchange=()=>{x.on=cb.checked;};
-  const d=document.createElement('div');
-  d.innerHTML='<code></code><span></span>';
-  d.querySelector('code').textContent=x.p.map(s=>typeof s==='number'?s+1:s).join(' → ')+(has?'  (pehle se placeholder)':'');
-  d.querySelector('span').textContent=x.v.length>120?x.v.slice(0,120)+'…':x.v;
-  r.append(cb,d);box.append(r);
- });
- $('#saveRow').hidden=false;
-};
-function mkKey(p,used){
- let b=p.map(String).join('_').replace(/[^\w]+/g,'_').replace(/^_|_$/g,'')||'field',k=b,n=2;
- while(used.has(k)){k=b+'_'+n++;}used.add(k);return k;
-}
-$('#saveStyle').onclick=()=>{
- if(!draft)return;
- const tpl=JSON.parse(JSON.stringify(draft)),used=new Set(),fields=[];
- const setAt=(p,val)=>{let o=tpl;for(let i=0;i<p.length-1;i++)o=o[p[i]];o[p[p.length-1]]=val;};
- leaves.forEach(x=>{
-  const g=typeof x.p[0]==='number'?'Fields':String(x.p[0]);
-  if(/\{\{[^{}]+\}\}/.test(x.v)){
-   for(const m of x.v.matchAll(PH)){if(!used.has(m[1])){used.add(m[1]);fields.push({key:m[1],label:m[1].replace(/_/g,' '),group:g,type:'text',def:'',presets:/scene/i.test(m[1])});}}
-  }else if(x.on){
-   const k=mkKey(x.p,used);
-   fields.push({key:k,label:x.p.map(s=>typeof s==='number'?s+1:s).join(' → '),group:g,type:(x.v.length>60||/scene|desc|prompt|background/i.test(k))?'textarea':'text',def:x.v,presets:/scene/i.test(k)});
-   setAt(x.p,'{{'+k+'}}');
+  function save(){
+    try{ localStorage.setItem(KEY,JSON.stringify(db)); }
+    catch(e){ alert('सेव नहीं हुआ: जगह भर गई है। "बैकअप डाउनलोड करो" करके पुरानी फोटो हटा दो।'); }
   }
- });
- if(!fields.length){$('#addErr').textContent='Kam se kam ek field par tick lagao.';return;}
- const s={id:'u'+Date.now(),name:$('#newName').value.trim()||('Style '+(S.styles.length+2)),template:tpl,fields};
- S.styles.push(s);S.cur=s.id;
- $('#newJson').value='';$('#newName').value='';$('#leaves').replaceChildren();$('#saveRow').hidden=true;$('#addBox').hidden=true;draft=null;
- drawSel();drawFields();
-};
-let dt=null;
-$('#delBtn').onclick=e=>{
- const b=e.target;
- if(!dt){b.textContent='Pakka hatao?';dt=setTimeout(()=>{b.textContent='Ye style hatao';dt=null;},3000);return;}
- clearTimeout(dt);dt=null;b.textContent='Ye style hatao';
- S.styles=S.styles.filter(x=>x.id!==S.cur);delete S.vals[S.cur];S.cur='tech3';drawSel();drawFields();
-};
+  function day(k=cur){ return db.days[k]||(db.days[k]={title:'',views:'',result:'',entries:[]}); }
+  function grow(t){ t.style.height='auto'; t.style.height=t.scrollHeight+'px'; }
 
-/* backup */
-$('#bk').onclick=()=>dlFile('thumbnail-styles-backup.json',JSON.stringify({styles:S.styles,vals:S.vals},null,2));
-$('#rs').onclick=()=>$('#rsFile').click();
-$('#rsFile').onchange=async e=>{
- const f=e.target.files[0];if(!f)return;
- try{
-  const d=JSON.parse(await f.text());
-  if(!Array.isArray(d.styles))throw new Error('styles nahi mile');
-  S={styles:d.styles,vals:d.vals||{},cur:'tech3'};
-  $('#bkMsg').style.color='var(--ok)';$('#bkMsg').textContent='Restore ho gaya: '+d.styles.length+' style.';
-  drawSel();drawFields();
- }catch(err){$('#bkMsg').style.color='var(--rd)';$('#bkMsg').textContent='Backup file sahi nahi hai: '+err.message;}
- e.target.value='';
-};
-drawSel();drawFields();
+  /* ---------- header ---------- */
+  function renderHead(){
+    $('dateText').textContent=pretty(cur);
+    $('datePick').value=cur;
+    const d=parse(cur);
+    $('goalTitle').textContent=MON[d.getMonth()]+' Goal ('+HMON[d.getMonth()]+' का लक्ष्य)';
+    const x=day();
+    $('title').value=x.title||''; $('views').value=x.views===''?'':x.views; $('result').value=x.result||'';
+    grow($('result'));
+  }
+  function tickClock(){ $('clock').textContent='Time '+fmt12(nowHHMM()); }
+  setInterval(tickClock,15000); tickClock();
+
+  /* ---------- goals (month wise) ---------- */
+  function renderGoals(){
+    const mk=cur.slice(0,7), list=db.goals[mk]||[];
+    $('goalList').innerHTML=list.map((g,i)=>
+      `<li class="${g.done?'done':''}"><input type="checkbox" data-g="${i}" ${g.done?'checked':''} aria-label="पूरा हुआ"><span>${esc(g.t)}</span><button data-gd="${i}" aria-label="लक्ष्य हटाओ">×</button></li>`
+    ).join('');
+  }
+  $('goalList').addEventListener('change',e=>{
+    const i=e.target.dataset.g; if(i==null)return;
+    const mk=cur.slice(0,7); db.goals[mk][i].done=e.target.checked; save(); renderGoals();
+  });
+  $('goalList').addEventListener('click',e=>{
+    const i=e.target.dataset.gd; if(i==null)return;
+    db.goals[cur.slice(0,7)].splice(i,1); save(); renderGoals();
+  });
+  $('goalNew').addEventListener('keydown',e=>{
+    if(e.key!=='Enter')return; const v=e.target.value.trim(); if(!v)return;
+    const mk=cur.slice(0,7); (db.goals[mk]=db.goals[mk]||[]).push({t:v,done:false});
+    e.target.value=''; save(); renderGoals();
+  });
+
+  /* ---------- entries ---------- */
+  function renderEntries(){
+    const list=day().entries;
+    if(!list.length){
+      $('entries').innerHTML='<div class="empty">अभी कुछ नहीं लिखा है। ऊपर <b>Time</b> दबाओ और लिखो क्या कर रहे हो, या <b>Thumbnail</b> दबाओ और लिखो कि थंबनेल क्या सोचकर बनाया।</div>';
+      return;
+    }
+    $('entries').innerHTML=list.map(en=>{
+      if(en.type==='time'){
+        return `<div class="row" data-id="${en.id}">
+          <div class="tag box"><input type="time" data-f="time" value="${esc(en.time)}" aria-label="Time"></div>
+          <textarea data-f="text" rows="1" placeholder="इस समय में स्क्रिप्ट लिख रहा हूँ... देखता हूँ कितना समय लगेगा">${esc(en.text)}</textarea>
+          <button class="del" data-del aria-label="हटाओ">×</button></div>`;
+      }
+      return `<div class="row" data-id="${en.id}">
+        <div class="tag box">Thumbnail</div>
+        <div class="thumbcol">
+          ${en.img?`<img class="thumbimg" src="${en.img}" alt="थंबनेल">`:''}
+          <label class="pick"><input type="file" accept="image/*" data-img>${en.img?'फोटो बदलो':'+ थंबनेल की फोटो लगाओ'}</label>
+          <textarea data-f="text" rows="1" placeholder="यह थंबनेल क्या सोचकर बनाया? कौन सा टेक्स्ट, रंग, चेहरा, और क्यों?">${esc(en.text)}</textarea>
+        </div>
+        <button class="del" data-del aria-label="हटाओ">×</button></div>`;
+    }).join('');
+    $('entries').querySelectorAll('textarea').forEach(grow);
+  }
+  $('entries').addEventListener('input',e=>{
+    const row=e.target.closest('.row'); if(!row)return;
+    const en=day().entries.find(x=>x.id===row.dataset.id); if(!en)return;
+    const f=e.target.dataset.f; if(!f)return;
+    en[f]=e.target.value; if(e.target.tagName==='TEXTAREA')grow(e.target); save();
+  });
+  $('entries').addEventListener('click',e=>{
+    if(!e.target.hasAttribute('data-del'))return;
+    const row=e.target.closest('.row');
+    const x=day(); const idx=x.entries.findIndex(i=>i.id===row.dataset.id); if(idx<0)return;
+    const removed=x.entries.splice(idx,1)[0]; const k=cur; save(); renderEntries();
+    showToast('एंट्री हट गई',()=>{ day(k).entries.splice(idx,0,removed); save(); renderEntries(); });
+  });
+  $('entries').addEventListener('change',e=>{
+    if(!e.target.hasAttribute('data-img'))return;
+    const file=e.target.files[0]; if(!file)return;
+    const id=e.target.closest('.row').dataset.id;
+    shrink(file,720,.75).then(url=>{
+      const en=day().entries.find(x=>x.id===id); en.img=url; save(); renderEntries();
+    });
+  });
+  function shrink(file,max,q){
+    return new Promise(res=>{
+      const r=new FileReader();
+      r.onload=()=>{ const im=new Image(); im.onload=()=>{
+        const s=Math.min(1,max/Math.max(im.width,im.height));
+        const c=document.createElement('canvas'); c.width=im.width*s; c.height=im.height*s;
+        c.getContext('2d').drawImage(im,0,0,c.width,c.height); res(c.toDataURL('image/jpeg',q));
+      }; im.src=r.result; };
+      r.readAsDataURL(file);
+    });
+  }
+
+  let toastT;
+  function showToast(msg,undo){
+    const t=$('toast'); t.innerHTML='<span>'+msg+'</span><button type="button">वापस लाओ</button>';
+    t.classList.add('show'); clearTimeout(toastT);
+    t.querySelector('button').onclick=()=>{undo();t.classList.remove('show')};
+    toastT=setTimeout(()=>t.classList.remove('show'),6000);
+  }
+  function add(type){
+    const x=day();
+    x.entries.push(type==='time'?{id:uid(),type:'time',time:nowHHMM(),text:''}:{id:uid(),type:'thumb',img:'',text:''});
+    save(); renderEntries();
+    const rows=$('entries').querySelectorAll('.row'); const last=rows[rows.length-1];
+    const ta=last.querySelector('textarea'); if(ta){ta.focus();} last.scrollIntoView({block:'center',behavior:'smooth'});
+  }
+  $('addTime').onclick=()=>add('time');
+  $('addThumb').onclick=()=>add('thumb');
+
+  /* ---------- day meta ---------- */
+  $('title').addEventListener('input',e=>{day().title=e.target.value;save()});
+  $('views').addEventListener('input',e=>{day().views=e.target.value===''?'':Number(e.target.value);save();if($('all').classList.contains('open'))renderAll()});
+  $('result').addEventListener('input',e=>{day().result=e.target.value;grow(e.target);save()});
+
+  function go(k){ cur=k; renderAll_(); }
+  function shift(n){ const d=parse(cur); d.setDate(d.getDate()+n); go(ymd(d)); }
+  $('prev').onclick=()=>shift(-1); $('next').onclick=()=>shift(1);
+  $('datePick').addEventListener('change',e=>{ if(e.target.value)go(e.target.value); });
+
+  /* ---------- all videos ---------- */
+  function renderAll(){
+    const keys=Object.keys(db.days).filter(k=>{
+      const d=db.days[k]; return d.title||d.views!==''||d.result||(d.entries&&d.entries.length);
+    }).sort().reverse();
+    if(!keys.length){ $('all').innerHTML='<div class="empty">अभी कोई वीडियो नहीं लिखा।</div>'; return; }
+    let best=null,bv=-1; keys.forEach(k=>{const v=Number(db.days[k].views);if(db.days[k].views!==''&&v>bv){bv=v;best=k}});
+    $('all').innerHTML=keys.map(k=>{
+      const d=db.days[k], th=d.entries.filter(e=>e.type==='thumb').length, tm=d.entries.filter(e=>e.type==='time').length;
+      return `<div class="vid" data-k="${k}">
+        <div>${pretty(k)}</div>
+        <div>${esc(d.title||'(नाम नहीं)')} ${k===best&&bv>0?'<span class="best">सबसे ज़्यादा व्यूज़</span>':''}</div>
+        <div class="v">${d.views===''?'-':Number(d.views).toLocaleString('en-IN')}</div>
+        <div class="sub">${tm} समय की एंट्री, ${th} थंबनेल${d.result?' | '+esc(d.result.slice(0,90))+(d.result.length>90?'...':''):''}</div>
+      </div>`;
+    }).join('');
+  }
+  $('all').addEventListener('click',e=>{ const v=e.target.closest('.vid'); if(v){ go(v.dataset.k); window.scrollTo({top:0,behavior:'smooth'}); } });
+  $('toggleAll').onclick=()=>{ $('all').classList.toggle('open'); if($('all').classList.contains('open'))renderAll(); };
+
+  /* ---------- backup ---------- */
+  $('export').onclick=()=>{
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([JSON.stringify(db)],{type:'application/json'}));
+    a.download='video-diary-backup-'+ymd(new Date())+'.json'; a.click();
+  };
+  $('importBtn').onclick=()=>$('importFile').click();
+  $('importFile').addEventListener('change',e=>{
+    const f=e.target.files[0]; if(!f)return;
+    const r=new FileReader();
+    r.onload=()=>{ try{
+      const d=JSON.parse(r.result); if(!d.days)throw 0;
+      if(!confirm('अभी का डेटा बदल जाएगा। आगे बढ़ें?'))return;
+      db=d; db.goals=db.goals||{}; save(); renderAll_();
+    }catch(err){ alert('यह सही बैकअप फ़ाइल नहीं है।'); } };
+    r.readAsText(f); e.target.value='';
+  });
+
+  function renderAll_(){ renderHead(); renderGoals(); renderEntries(); if($('all').classList.contains('open'))renderAll(); }
+  renderAll_();
+})();
 </script>
 </body>
 </html>
