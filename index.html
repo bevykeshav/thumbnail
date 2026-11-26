@@ -80,6 +80,7 @@
   .tag input{font:inherit;font-size:16px;font-weight:700;color:var(--ink);background:transparent;border:0;width:100%;text-align:center}
   .row textarea{width:100%;font:inherit;color:var(--ink);background:transparent;border:0;resize:none;overflow:hidden;min-height:34px;line-height:1.55}
   .row textarea::placeholder{color:#9a94d6}
+  .vrow{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:2px}
   .vw{font-size:15px;display:flex;gap:6px;align-items:center;color:var(--ink-soft);margin-top:2px}
   .vw input{font:inherit;color:var(--ink);background:transparent;border:0;border-bottom:1.5px solid var(--ink);width:110px}
   .del{border:2px solid var(--warn);background:#fff;color:var(--warn);font-size:18px;font-weight:700;line-height:1;width:30px;height:30px;border-radius:50%;padding:0;cursor:pointer}
@@ -130,7 +131,7 @@
   <div class="holes" aria-hidden="true"></div>
 
   <div class="top">
-    <button class="tbtn box" id="addThumb" title="क्लिक करते ही नीचे थंबनेल की एंट्री आ जाएगी">Thumbnail (थंबनेल)<small>क्लिक करो = नीचे जुड़ेगा</small></button>
+    <button class="tbtn box" id="addThumb" title="क्लिक करते ही सबसे आखिरी वीडियो के नीचे थंबनेल जुड़ जाएगा">Thumbnail (थंबनेल)<small>आखिरी वीडियो के नीचे</small></button>
 
     <div class="center">
       <div class="datebar">
@@ -275,7 +276,7 @@
         return `<div class="row" data-id="${en.id}">
           <div class="tag box"><input type="time" data-f="time" value="${esc(en.time)}" aria-label="Time"></div>
           <div><textarea data-f="text" rows="1" placeholder="अभी क्या कर रहा हूँ? ये वीडियो क्यों बना रहा हूँ? स्क्रिप्ट ऐसी क्यों लिखी?">${esc(en.text)}</textarea>
-            <label class="vw">Views (व्यूज़):<input type="number" min="0" data-f="views" value="${esc(en.views)}" placeholder="आने पर भरो"></label></div>
+            <div class="vrow"><label class="vw">Views (व्यूज़):<input type="number" min="0" data-f="views" value="${esc(en.views)}" placeholder="आने पर भरो"></label><button type="button" class="box mini" data-addthumb>+ Thumbnail (थंबनेल)</button></div></div>
           <button class="del" data-del aria-label="हटाओ">×</button></div>`;
       }
       return `<div class="row" data-id="${en.id}">
@@ -296,6 +297,7 @@
     en[f]=e.target.value; if(e.target.tagName==='TEXTAREA')grow(e.target); save();
   });
   $('entries').addEventListener('click',e=>{
+    if(e.target.hasAttribute('data-addthumb')){ addThumbAfter(e.target.closest('.row').dataset.id); return; }
     if(!e.target.hasAttribute('data-del'))return;
     const row=e.target.closest('.row');
     const x=day(); const idx=x.entries.findIndex(i=>i.id===row.dataset.id); if(idx<0)return;
@@ -322,6 +324,16 @@
     });
   }
 
+  function addThumbAfter(id){
+    const x=day(); let i=id?x.entries.findIndex(e=>e.id===id):-1;
+    if(i<0){ for(let k=x.entries.length-1;k>=0;k--){ if(x.entries[k].type==='time'){i=k;break;} } }
+    const en={id:uid(),type:'thumb',img:'',text:''};
+    if(i<0){ x.entries.push(en); }
+    else { let j=i+1; while(j<x.entries.length&&x.entries[j].type==='thumb')j++; x.entries.splice(j,0,en); }
+    save(); renderEntries();
+    const row=$('entries').querySelector('.row[data-id="'+en.id+'"]');
+    if(row){ const ta=row.querySelector('textarea'); if(ta)ta.focus(); row.scrollIntoView({block:'center',behavior:'smooth'}); }
+  }
   let toastT;
   function showToast(msg,undo){
     const t=$('toast'); t.innerHTML='<span>'+msg+'</span><button type="button">वापस लाओ</button>';
@@ -337,7 +349,7 @@
     const ta=last.querySelector('textarea'); if(ta){ta.focus();} last.scrollIntoView({block:'center',behavior:'smooth'});
   }
   $('addTime').onclick=()=>add('time');
-  $('addThumb').onclick=()=>add('thumb');
+  $('addThumb').onclick=()=>addThumbAfter(null);
   $('addLine').onclick=()=>add('line');
 
   /* ---------- day meta ---------- */
