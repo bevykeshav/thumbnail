@@ -84,7 +84,7 @@
   .tinyth:hover{background:#ece9ff;color:var(--ink)}
   .vrow{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:2px}
   .vw{font-size:15px;display:flex;gap:6px;align-items:center;color:var(--ink-soft);margin-top:2px}
-  .vw input{font:inherit;color:var(--ink);background:transparent;border:0;border-bottom:1.5px solid var(--ink);width:110px}
+  .vw input{font:inherit;color:var(--ink);background:transparent;border:0;border-bottom:1.5px solid var(--ink);width:min(320px,60vw)}
   .del{border:2px solid var(--warn);background:#fff;color:var(--warn);font-size:18px;font-weight:700;line-height:1;width:30px;height:30px;border-radius:50%;padding:0;cursor:pointer}
   .del:hover{background:var(--warn);color:#fff}
   #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2b2a33;color:#fff;padding:10px 16px;border-radius:8px;display:none;gap:14px;align-items:center;z-index:50;box-shadow:0 4px 16px rgba(0,0,0,.4)}
@@ -95,11 +95,6 @@
   .pick{display:inline-block;border:1.5px dashed var(--ink-soft);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:15px;width:fit-content}
   .pick input{display:none}
   .empty{padding:26px 8px;color:var(--ink-soft);text-align:center}
-
-  /* result */
-  .result{margin-top:16px;padding:10px 14px}
-  .result h3{margin:0 0 4px;font-size:19px}
-  .result textarea{width:100%;font:inherit;color:var(--ink);background:transparent;border:0;resize:none;overflow:hidden;min-height:140px}
 
   /* all videos */
   .tools{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
@@ -164,11 +159,6 @@
 
   <div class="entries box" id="entries"></div>
 
-  <div class="result box">
-    <h3>Views आने के बाद: क्या काम किया?</h3>
-    <textarea id="result" placeholder="किस स्क्रिप्ट की लाइन या थंबनेल के आइडिया से व्यूज़ आए? यहाँ लिखो ताकि अगली बार वही दोहरा सको।"></textarea>
-  </div>
-
   <div class="tools">
     <button class="box" id="toggleAll">सारे वीडियो और व्यूज़</button>
     <button class="box" id="export">बैकअप डाउनलोड करो</button>
@@ -214,9 +204,6 @@
     $('datePick').value=cur;
     const d=parse(cur);
     $('goalTitle').textContent=MON[d.getMonth()]+' Goal ('+HMON[d.getMonth()]+' का लक्ष्य)';
-    const x=day();
-    $('result').value=x.result||'';
-    grow($('result'));
   }
   function tickClock(){ $('clock').textContent='Time '+fmt12(nowHHMM()); }
   setInterval(tickClock,15000); tickClock();
@@ -278,7 +265,7 @@
         return `<div class="row" data-id="${en.id}">
           <div class="tag box"><input type="time" data-f="time" value="${esc(en.time)}" aria-label="Time"></div>
           <div><textarea data-f="text" rows="1" placeholder="अभी क्या कर रहा हूँ? ये वीडियो क्यों बना रहा हूँ? स्क्रिप्ट ऐसी क्यों लिखी?">${esc(en.text)}</textarea>
-            <div class="vrow"><label class="vw">Views (व्यूज़):<input type="number" min="0" data-f="views" value="${esc(en.views)}" placeholder="आने पर भरो"></label><button type="button" class="tinyth" data-addthumb title="इस वीडियो के नीचे थंबनेल जोड़ो">+ थंबनेल</button></div></div>
+            <div class="vrow"><label class="vw">Views (व्यूज़):<input type="text" data-f="views" value="${esc(en.views)}" placeholder="व्यूज़ या कुछ भी लिखो"></label><button type="button" class="tinyth" data-addthumb title="इस वीडियो के नीचे थंबनेल जोड़ो">+ थंबनेल</button></div></div>
           <button class="del" data-del aria-label="हटाओ">×</button></div>`;
       }
       return `<div class="row" data-id="${en.id}">
@@ -355,7 +342,6 @@
   $('addLine').onclick=()=>add('line');
 
   /* ---------- day meta ---------- */
-  $('result').addEventListener('input',e=>{day().result=e.target.value;grow(e.target);save()});
 
   function go(k){ cur=k; renderAll_(); }
   function shift(n){ const d=parse(cur); d.setDate(d.getDate()+n); go(ymd(d)); }
@@ -363,14 +349,19 @@
   $('datePick').addEventListener('change',e=>{ if(e.target.value)go(e.target.value); });
 
   /* ---------- all videos ---------- */
+  function vnum(t){
+    const m=String(t||'').toLowerCase().replace(/,/g,'').match(/(\d+(?:\.\d+)?)\s*(k|m|l|lakh|हज़ार|लाख)?/);
+    if(!m)return 0; const mul={k:1e3,'हज़ार':1e3,m:1e6,l:1e5,lakh:1e5,'लाख':1e5}[m[2]]||1;
+    return parseFloat(m[1])*mul;
+  }
   function renderAll(){
-    const keys=Object.keys(db.days).filter(k=>{const d=db.days[k];return d.result||(d.entries&&d.entries.length)}).sort().reverse();
+    const keys=Object.keys(db.days).filter(k=>{const d=db.days[k];return d.entries&&d.entries.length}).sort().reverse();
     if(!keys.length){ $('all').innerHTML='<div class="empty">अभी कोई वीडियो नहीं लिखा।</div>'; return; }
     let bv=0,bid=null;
-    keys.forEach(k=>db.days[k].entries.forEach(e=>{const v=Number(e.views);if(e.type==='time'&&v>bv){bv=v;bid=e.id}}));
+    keys.forEach(k=>db.days[k].entries.forEach(e=>{const v=vnum(e.views);if(e.type==='time'&&v>bv){bv=v;bid=e.id}}));
     $('all').innerHTML=keys.map(k=>{
       const d=db.days[k], rows=d.entries.map(e=>{
-        if(e.type==='time') return `<div class="sub">${fmt12(e.time)} - ${esc((e.text||'(खाली)').slice(0,110))}${(e.text||'').length>110?'...':''} <b>${e.views!==''&&e.views!=null?Number(e.views).toLocaleString('en-IN')+' व्यूज़':''}</b> ${e.id===bid?'<span class="best">सबसे ज़्यादा व्यूज़</span>':''}</div>`;
+        if(e.type==='time') return `<div class="sub">${fmt12(e.time)} - ${esc((e.text||'(खाली)').slice(0,110))}${(e.text||'').length>110?'...':''} <b>${e.views?'| '+esc(e.views):''}</b> ${e.id===bid?'<span class="best">सबसे ज़्यादा व्यूज़</span>':''}</div>`;
         if(e.type==='line') return '<div class="sub" style="border-top:3px solid #ff3b1f;margin:4px 0"></div>';
         return `<div class="sub">थंबनेल: ${esc((e.text||'(खाली)').slice(0,110))}</div>`;
       }).join('');
