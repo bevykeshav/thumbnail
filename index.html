@@ -62,7 +62,7 @@
   #title{flex:1;min-width:200px}
   #views{width:110px}
 
-  .target{padding:3px 10px 5px;margin-bottom:12px;max-width:340px;font-size:15px;line-height:1.35}
+  .target{padding:3px 10px 5px;max-width:340px;font-size:15px;line-height:1.35}
   .target h3{margin:0 0 1px;font-size:16px}
   .target ul{list-style:none;margin:0;padding:0}
   .target li{display:flex;gap:6px;align-items:center}
@@ -120,6 +120,7 @@
     .top{grid-template-columns:1fr 1fr}
     .center{grid-column:1/3;grid-row:1}
     .goal{grid-column:1/3;max-width:none}
+    .target{grid-column:1/3;max-width:none}
     .row{grid-template-columns:128px 1fr 34px;gap:8px}
     .row.line{grid-template-columns:1fr 34px}
     .vid{grid-template-columns:100px 1fr}
@@ -132,19 +133,17 @@
   <div class="holes" aria-hidden="true"></div>
 
   <div class="top">
-    <button class="tbtn box" id="addThumb" title="क्लिक करते ही सबसे आखिरी वीडियो के नीचे थंबनेल जुड़ जाएगा">Thumbnail (थंबनेल)<small>आखिरी वीडियो के नीचे</small></button>
+  <div class="target box">
+    <h3>Today's Target (आज का टारगेट)</h3>
+    <ul id="targetList"></ul>
+    <input type="text" id="targetNew" placeholder="+ टारगेट लिखो, Enter दबाओ">
+  </div>
 
     <div class="center">
       <div class="datebar">
         <button class="nav" id="prev" aria-label="पिछला दिन">‹</button>
         <div id="dateShow"><span id="dateText"></span><input type="date" id="datePick" aria-label="तारीख चुनो"></div>
         <button class="nav" id="next" aria-label="अगला दिन">›</button>
-      </div>
-      <div class="btnrow">
-        <button class="tbtn box timebtn" id="addTime" title="क्लिक करते ही अभी का समय नीचे आ जाएगा">
-          <span id="clock">Time</span><small>क्लिक करो = नीचे जुड़ेगा</small>
-        </button>
-      <button class="box mini" id="addLine" title="क्लिक करते ही नीचे एक लाइन आ जाएगी, जिससे वीडियो अलग-अलग दिखें">Line (लाइन)</button>
       </div>
     </div>
 
@@ -153,12 +152,6 @@
       <ul id="goalList"></ul>
       <input type="text" id="goalNew" placeholder="+ नया लक्ष्य लिखो, फिर Enter दबाओ">
     </div>
-  </div>
-
-  <div class="target box">
-    <h3>Today's Target (आज का टारगेट)</h3>
-    <ul id="targetList"></ul>
-    <input type="text" id="targetNew" placeholder="+ टारगेट लिखो, Enter दबाओ">
   </div>
 
   <div class="entries box" id="entries"></div>
@@ -214,7 +207,7 @@
     const d=parse(cur);
     $('goalTitle').textContent=MON[d.getMonth()]+' Goal ('+HMON[d.getMonth()]+' का लक्ष्य)';
   }
-  function tickClock(){ $('clock').textContent='Time '+fmt12(nowHHMM()); $('fClock').textContent=fmt12(nowHHMM()); }
+  function tickClock(){ $('fClock').textContent=fmt12(nowHHMM()); }
   setInterval(tickClock,15000); tickClock();
 
   /* ---------- goals (month wise) ---------- */
@@ -346,9 +339,6 @@
     const rows=$('entries').querySelectorAll('.row'); const last=rows[rows.length-1];
     const ta=last.querySelector('textarea'); if(ta){ta.focus();} last.scrollIntoView({block:'center',behavior:'smooth'});
   }
-  $('addTime').onclick=()=>add('time');
-  $('addThumb').onclick=()=>addThumbAfter(null);
-  $('addLine').onclick=()=>add('line');
   $('fTime').onclick=()=>add('time');
   $('fThumb').onclick=()=>addThumbAfter(null);
   $('fLine').onclick=()=>add('line');
