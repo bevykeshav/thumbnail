@@ -80,6 +80,8 @@
   .tag input{font:inherit;font-size:16px;font-weight:700;color:var(--ink);background:transparent;border:0;width:100%;text-align:center}
   .row textarea{width:100%;font:inherit;color:var(--ink);background:transparent;border:0;resize:none;overflow:hidden;min-height:34px;line-height:1.55}
   .row textarea::placeholder{color:#9a94d6}
+  .tinyth{font-size:11px;line-height:1.4;padding:0 6px;border:1px solid var(--ink-soft);border-radius:4px;background:var(--paper);color:var(--ink-soft);cursor:pointer}
+  .tinyth:hover{background:#ece9ff;color:var(--ink)}
   .vrow{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:2px}
   .vw{font-size:15px;display:flex;gap:6px;align-items:center;color:var(--ink-soft);margin-top:2px}
   .vw input{font:inherit;color:var(--ink);background:transparent;border:0;border-bottom:1.5px solid var(--ink);width:110px}
@@ -276,7 +278,7 @@
         return `<div class="row" data-id="${en.id}">
           <div class="tag box"><input type="time" data-f="time" value="${esc(en.time)}" aria-label="Time"></div>
           <div><textarea data-f="text" rows="1" placeholder="अभी क्या कर रहा हूँ? ये वीडियो क्यों बना रहा हूँ? स्क्रिप्ट ऐसी क्यों लिखी?">${esc(en.text)}</textarea>
-            <div class="vrow"><label class="vw">Views (व्यूज़):<input type="number" min="0" data-f="views" value="${esc(en.views)}" placeholder="आने पर भरो"></label><button type="button" class="box mini" data-addthumb>+ Thumbnail (थंबनेल)</button></div></div>
+            <div class="vrow"><label class="vw">Views (व्यूज़):<input type="number" min="0" data-f="views" value="${esc(en.views)}" placeholder="आने पर भरो"></label><button type="button" class="tinyth" data-addthumb title="इस वीडियो के नीचे थंबनेल जोड़ो">+ थंबनेल</button></div></div>
           <button class="del" data-del aria-label="हटाओ">×</button></div>`;
       }
       return `<div class="row" data-id="${en.id}">
