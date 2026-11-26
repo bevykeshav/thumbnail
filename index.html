@@ -88,7 +88,10 @@
   .vw input{font:inherit;color:#000;background:transparent;border:0;border-bottom:1.5px solid #000;width:min(320px,60vw)}
   .del{border:2px solid var(--warn);background:#fff;color:var(--warn);font-size:18px;font-weight:700;line-height:1;width:30px;height:30px;border-radius:50%;padding:0;cursor:pointer}
   .del:hover{background:var(--warn);color:#fff}
-  #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2b2a33;color:#fff;padding:10px 16px;border-radius:8px;display:none;gap:14px;align-items:center;z-index:50;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+  .fbar{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:6px;padding:5px 8px;z-index:40;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+  .fbar button{border:1.5px solid var(--ink);border-radius:6px;background:var(--paper);padding:3px 12px;font-weight:700;font-size:16px;white-space:nowrap}
+  .fbar button:hover{background:#ece9ff}
+  #toast{position:fixed;left:50%;bottom:68px;transform:translateX(-50%);background:#2b2a33;color:#fff;padding:10px 16px;border-radius:8px;display:none;gap:14px;align-items:center;z-index:50;box-shadow:0 4px 16px rgba(0,0,0,.4)}
   #toast.show{display:flex}
   #toast button{background:none;border:0;color:#ffd166;font-weight:700;font-size:17px;cursor:pointer}
   .thumbcol{display:flex;flex-direction:column;gap:6px}
@@ -169,6 +172,11 @@
   <div class="box" id="all"></div>
 </div>
 
+<div class="fbar box" id="fbar">
+  <button type="button" id="fTime">Time <span id="fClock"></span></button>
+  <button type="button" id="fThumb">Thumbnail (थंबनेल)</button>
+  <button type="button" id="fLine">Line (लाइन)</button>
+</div>
 <div id="toast" role="status"></div>
 <script>
 (function(){
@@ -206,7 +214,7 @@
     const d=parse(cur);
     $('goalTitle').textContent=MON[d.getMonth()]+' Goal ('+HMON[d.getMonth()]+' का लक्ष्य)';
   }
-  function tickClock(){ $('clock').textContent='Time '+fmt12(nowHHMM()); }
+  function tickClock(){ $('clock').textContent='Time '+fmt12(nowHHMM()); $('fClock').textContent=fmt12(nowHHMM()); }
   setInterval(tickClock,15000); tickClock();
 
   /* ---------- goals (month wise) ---------- */
@@ -341,6 +349,9 @@
   $('addTime').onclick=()=>add('time');
   $('addThumb').onclick=()=>addThumbAfter(null);
   $('addLine').onclick=()=>add('line');
+  $('fTime').onclick=()=>add('time');
+  $('fThumb').onclick=()=>addThumbAfter(null);
+  $('fLine').onclick=()=>add('line');
 
   /* ---------- day meta ---------- */
 
