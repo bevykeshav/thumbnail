@@ -82,16 +82,12 @@
   .row textarea::placeholder{color:#9a94d6}
   .tinyth{font-size:11px;line-height:1.4;padding:0 6px;border:1px solid var(--ink-soft);border-radius:4px;background:var(--paper);color:var(--ink-soft);cursor:pointer}
   .tinyth:hover{background:#ece9ff;color:var(--ink)}
-  .vw input::placeholder{color:#777}
+  .vw textarea::placeholder{color:#777}
   .vrow{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:2px}
-  .vw{font-size:15px;display:flex;gap:6px;align-items:center;color:var(--ink-soft);margin-top:2px}
-  .vw input{font:inherit;color:#000;background:transparent;border:0;border-bottom:1.5px solid #000;width:min(320px,60vw)}
+  .vw{font-size:15px;display:flex;gap:6px;align-items:flex-start;flex:1 1 300px;min-width:0;color:var(--ink-soft);margin-top:2px}
+  .row .vw textarea{flex:1;min-width:0;width:auto;font:inherit;color:#000;background:transparent;border:0;border-bottom:1.5px solid #000;min-height:26px;line-height:1.5;resize:none;overflow:hidden}
   .del{border:2px solid var(--warn);background:#fff;color:var(--warn);font-size:18px;font-weight:700;line-height:1;width:30px;height:30px;border-radius:50%;padding:0;cursor:pointer}
   .del:hover{background:var(--warn);color:#fff}
-  /* side buttons (delete + views/thumbnail toggle) */
-  .side{display:flex;flex-direction:column;gap:6px;align-items:center}
-  .tog{border:2px solid var(--ink);background:#fff;color:var(--ink);font-size:15px;font-weight:700;line-height:1;width:30px;height:30px;border-radius:50%;padding:0;cursor:pointer}
-  .tog:hover,.tog.on{background:var(--ink);color:#fff}
   .fbar{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:6px;padding:5px 8px;z-index:40;box-shadow:0 4px 14px rgba(0,0,0,.35)}
   .fbar button{border:1.5px solid var(--ink);border-radius:6px;background:var(--paper);padding:3px 12px;font-weight:700;font-size:16px;white-space:nowrap}
   .fbar button:hover{background:#ece9ff}
@@ -204,9 +200,6 @@
   function day(k=cur){ return db.days[k]||(db.days[k]={title:'',views:'',result:'',entries:[]}); }
   function grow(t){ t.style.height='auto'; t.style.height=t.scrollHeight+'px'; }
 
-  /* Views/थंबनेल वाला हिस्सा तभी दिखे जब बटन दबाया हो (या views पहले से लिखे हों) */
-  function isOpen(en){ return en.open===true || (en.open===undefined && !!en.views); }
-
   /* ---------- header ---------- */
   function renderHead(){
     $('dateText').textContent=pretty(cur);
@@ -271,15 +264,11 @@
         return `<div class="row line" data-id="${en.id}"><div class="sep"></div><button class="del" data-del aria-label="लाइन हटाओ">×</button></div>`;
       }
       if(en.type==='time'){
-        const open=isOpen(en);
         return `<div class="row" data-id="${en.id}">
           <div class="tag box"><input type="time" data-f="time" value="${esc(en.time)}" aria-label="Time"></div>
           <div><textarea data-f="text" rows="1" placeholder="अभी क्या कर रहा हूँ? ये वीडियो क्यों बना रहा हूँ? स्क्रिप्ट ऐसी क्यों लिखी?">${esc(en.text)}</textarea>
-            ${open?`<div class="vrow"><label class="vw">Views (व्यूज़):<input type="text" data-f="views" value="${esc(en.views)}" placeholder="व्यूज़ या कुछ भी लिखो"></label><button type="button" class="tinyth" data-addthumb title="इस वीडियो के नीचे थंबनेल जोड़ो">+ थंबनेल</button></div>`:''}</div>
-          <div class="side">
-            <button class="del" data-del aria-label="हटाओ">×</button>
-            <button type="button" class="tog ${open?'on':''}" data-tog aria-expanded="${open}" aria-label="${open?'Views और थंबनेल छुपाओ':'Views और थंबनेल दिखाओ'}" title="${open?'Views / थंबनेल छुपाओ':'Views / थंबनेल दिखाओ'}">${open?'▴':'▾'}</button>
-          </div></div>`;
+            <div class="vrow"><label class="vw">Views (व्यूज़):<textarea data-f="views" rows="1" placeholder="व्यूज़ या कुछ भी लिखो">${esc(en.views)}</textarea></label><button type="button" class="tinyth" data-addthumb title="इस वीडियो के नीचे थंबनेल जोड़ो">+ थंबनेल</button></div></div>
+          <button class="del" data-del aria-label="हटाओ">×</button></div>`;
       }
       return `<div class="row" data-id="${en.id}">
         <div class="tag box">Thumbnail</div>
@@ -299,17 +288,6 @@
     en[f]=e.target.value; if(e.target.tagName==='TEXTAREA')grow(e.target); save();
   });
   $('entries').addEventListener('click',e=>{
-    const tog=e.target.closest('[data-tog]');
-    if(tog){
-      const row=tog.closest('.row');
-      const en=day().entries.find(x=>x.id===row.dataset.id); if(!en)return;
-      en.open=!isOpen(en); save(); renderEntries();
-      if(en.open){
-        const r=$('entries').querySelector('.row[data-id="'+en.id+'"]');
-        const inp=r&&r.querySelector('input[data-f="views"]'); if(inp)inp.focus();
-      }
-      return;
-    }
     if(e.target.hasAttribute('data-addthumb')){ addThumbAfter(e.target.closest('.row').dataset.id); return; }
     if(!e.target.hasAttribute('data-del'))return;
     const row=e.target.closest('.row');
