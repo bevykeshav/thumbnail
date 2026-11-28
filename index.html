@@ -86,6 +86,10 @@
   .vrow{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:2px}
   .vw{font-size:15px;display:flex;gap:6px;align-items:flex-start;flex:1 1 300px;min-width:0;color:var(--ink-soft);margin-top:2px}
   .row .vw textarea{flex:1;min-width:0;width:auto;font:inherit;color:#000;background:transparent;border:0;border-bottom:1.5px solid #000;min-height:26px;line-height:1.5;resize:none;overflow:hidden}
+  .acts{display:flex;flex-direction:column;gap:6px;align-items:center}
+  .tgl{width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);background:#fff;color:var(--ink);font-size:11px;line-height:1;padding:0;cursor:pointer}
+  .tgl.on{background:var(--ink);color:#fff}
+  .vrow.hide{display:none}
   .del{border:2px solid var(--warn);background:#fff;color:var(--warn);font-size:18px;font-weight:700;line-height:1;width:30px;height:30px;border-radius:50%;padding:0;cursor:pointer}
   .del:hover{background:var(--warn);color:#fff}
   .fbar{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:6px;padding:5px 8px;z-index:40;box-shadow:0 4px 14px rgba(0,0,0,.35)}
@@ -264,11 +268,12 @@
         return `<div class="row line" data-id="${en.id}"><div class="sep"></div><button class="del" data-del aria-label="लाइन हटाओ">×</button></div>`;
       }
       if(en.type==='time'){
+        const op=isOpen(en);
         return `<div class="row" data-id="${en.id}">
           <div class="tag box"><input type="time" data-f="time" value="${esc(en.time)}" aria-label="Time"></div>
           <div><textarea data-f="text" rows="1" placeholder="अभी क्या कर रहा हूँ? ये वीडियो क्यों बना रहा हूँ? स्क्रिप्ट ऐसी क्यों लिखी?">${esc(en.text)}</textarea>
-            <div class="vrow"><label class="vw">Views (व्यूज़):<textarea data-f="views" rows="1" placeholder="व्यूज़ या कुछ भी लिखो">${esc(en.views)}</textarea></label><button type="button" class="tinyth" data-addthumb title="इस वीडियो के नीचे थंबनेल जोड़ो">+ थंबनेल</button></div></div>
-          <button class="del" data-del aria-label="हटाओ">×</button></div>`;
+            <div class="vrow${op?'':' hide'}"><label class="vw">Views (व्यूज़):<textarea data-f="views" rows="1" placeholder="व्यूज़ या कुछ भी लिखो">${esc(en.views)}</textarea></label><button type="button" class="tinyth" data-addthumb title="इस वीडियो के नीचे थंबनेल जोड़ो">+ थंबनेल</button></div></div>
+          <div class="acts"><button class="del" data-del aria-label="हटाओ">×</button><button type="button" class="tgl${op?' on':''}" data-tgl aria-label="${op?'Views बंद करो':'Views खोलो'}">${op?'▲':'▼'}</button></div></div>`;
       }
       return `<div class="row" data-id="${en.id}">
         <div class="tag box">Thumbnail</div>
@@ -288,6 +293,10 @@
     en[f]=e.target.value; if(e.target.tagName==='TEXTAREA')grow(e.target); save();
   });
   $('entries').addEventListener('click',e=>{
+    if(e.target.hasAttribute('data-tgl')){
+      const en=day().entries.find(x=>x.id===e.target.closest('.row').dataset.id); if(!en)return;
+      en.open=!isOpen(en); save(); renderEntries(); return;
+    }
     if(e.target.hasAttribute('data-addthumb')){ addThumbAfter(e.target.closest('.row').dataset.id); return; }
     if(!e.target.hasAttribute('data-del'))return;
     const row=e.target.closest('.row');
@@ -315,6 +324,7 @@
     });
   }
 
+  function isOpen(en){ return en.open!==undefined ? !!en.open : !!(en.views&&String(en.views).trim()); }
   function addThumbAfter(id){
     const x=day(); let i=id?x.entries.findIndex(e=>e.id===id):-1;
     if(i<0){ for(let k=x.entries.length-1;k>=0;k--){ if(x.entries[k].type==='time'){i=k;break;} } }
